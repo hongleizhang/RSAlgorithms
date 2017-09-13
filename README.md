@@ -1,6 +1,8 @@
 # Traditional recommendation
 Some algorithms about traditional recommendation
 
+* **UserCF**
+* **ItemCF**
 * **FunkSVD**
 * **FunkSVDwithR**
 * **BiasSVD**
