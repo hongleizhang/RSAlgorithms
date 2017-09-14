@@ -7,7 +7,7 @@ Some algorithms about traditional recommendation
 * **FunkSVDwithR**
 * **BiasSVD**
 * **SVD++**
-# Social-recommendation
+# Social recommendation
 Some algorithms about social recommendation
 
 * **SocialRec**[Ma et al. 2008]
