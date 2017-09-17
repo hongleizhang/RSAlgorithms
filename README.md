@@ -3,10 +3,10 @@ Some algorithms about traditional recommendation
 
 * **UserCF**[Resnick et al. 1994]
 * **ItemCF**[Sarwar et al. 2001]
-* **FunkSVD**
-* **FunkSVDwithR**
-* **BiasSVD**
-* **SVD++**
+* **FunkSVD**[Simon Funk. 2006]
+* **FunkSVDwithR**[Simon Funk. 2006]
+* **BiasSVD** [Koren et al. 2009]
+* **SVD++**[Koren et al. 2010]
 # Social recommendation
 Some algorithms about social recommendation
 
