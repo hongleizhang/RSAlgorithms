@@ -1,8 +1,8 @@
 # Traditional recommendation
 Some algorithms about traditional recommendation
 
-* **UserCF** [待完成]
-* **ItemCF** [待完成]
+* **UserCF**
+* **ItemCF**
 * **FunkSVD**
 * **FunkSVDwithR**
 * **BiasSVD**
