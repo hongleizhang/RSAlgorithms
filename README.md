@@ -5,7 +5,7 @@ Some algorithms about traditional recommendation
 * **ItemCF**[Sarwar et al. 2001]
 * **FunkSVD**[Simon Funk. 2006]
 * **FunkSVDwithR**[Simon Funk. 2006]
-* **BiasSVD** [Koren et al. 2009]
+* **BiasSVD**[Koren et al. 2009]
 * **SVD++**[Koren et al. 2010]
 # Social recommendation
 Some algorithms about social recommendation
