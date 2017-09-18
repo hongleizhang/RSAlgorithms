@@ -8,7 +8,7 @@ class FunkSVDwithR(MF):
 	"""
 	docstring for FunkSVDwithR
 	implement the FunkSVD with regularization
-
+	http://sifter.org/~simon/journal/20061211.html
 	"""
 
 	def __init__(self):#继承父类的方法
@@ -49,5 +49,5 @@ class FunkSVDwithR(MF):
 if __name__ == '__main__':
 	bmf=FunkSVDwithR()
 	bmf.train_model()
-	# bmf.predict_model()
+	bmf.predict_model()
 	bmf.show_rmse()

@@ -9,7 +9,8 @@ class SVDPP(MF):
 	"""
 	docstring for SVDPP
 	implement the SVDPP
-
+	
+	Koren Y. Factor in the neighbors: Scalable and accurate collaborative filtering[J]. ACM Transactions on Knowledge Discovery from Data (TKDD), 2010, 4(1): 1.
 	"""
 	def __init__(self):
 		super(SVDPP, self).__init__()

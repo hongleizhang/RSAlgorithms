@@ -1,5 +1,9 @@
+#encoding:utf-8
+import sys
+sys.path.append("..") #将该目录加入到环境变量
 import numpy as np
 from math import sqrt
+from utility.tools import sigmoid_2
 
 
 #x1,x2 is the form of np.array.
@@ -69,6 +73,23 @@ def cosine_sp(x1,x2):
 	except ZeroDivisionError:
 		return 0
 
+def cosine_improved_sp(x1,x2):
+	'x1,x2 are dicts,this version is for sparse representation'
+	total = 0
+	denom1 = 0
+	denom2 =0
+	nu=0
+	for k in x1:
+		if k in x2:
+			nu+=1
+			total+=x1[k]*x2[k]
+			denom1+=x1[k]**2
+			denom2+=x2[k]**2
+	try:
+		return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))*sigmoid_2(nu)
+	except ZeroDivisionError:
+		return 0
+
 
 def pearson_sp(x1,x2):
 	total = 0
@@ -84,6 +105,32 @@ def pearson_sp(x1,x2):
 				denom2 += (x2[k]-mean2) ** 2
 
 			return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))
+	except ZeroDivisionError:
+		return 0
+
+
+#TrustWalker userd
+def pearson_improved_sp(x1,x2):
+	total = 0.0
+	denom1 = 0
+	denom2 = 0
+	nu=0
+	try:
+		#不应该是item的均值
+		mean1 = sum(x1.values())/(len(x1)+0.0)
+		mean2 = sum(x2.values()) / (len(x2) + 0.0)
+		for k in x1:
+			if k in x2:
+				print('k'+str(k))
+				nu+=1
+				total += (x1[k]-mean1) * (x2[k]-mean2)
+				print('t'+str(total))
+				denom1 += (x1[k]-mean1) ** 2
+				denom2 += (x2[k]-mean2) ** 2
+		print('nu:'+str(nu))
+		print(total)
+
+		return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))*sigmoid_2(nu)
 	except ZeroDivisionError:
 		return 0
 

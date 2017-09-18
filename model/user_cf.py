@@ -10,7 +10,8 @@ class UserCF(MF):
 	"""
 	docstring for UserCF
 	implement the UserCF
-
+	
+	Resnick P, Iacovou N, Suchak M, et al. GroupLens: an open architecture for collaborative filtering of netnews[C]//Proceedings of the 1994 ACM conference on Computer supported cooperative work. ACM, 1994: 175-186.
 	"""
 
 	def __init__(self):#继承父类的方法

@@ -11,7 +11,7 @@ class RSTE(MF):
 	"""
 	docstring for RSTE
 	
-	Ma et al. 2009
+	Ma H, King I, Lyu M R. Learning to recommend with social trust ensemble[C]//Proceedings of the 32nd international ACM SIGIR conference on Research and development in information retrieval. ACM, 2009: 203-210.
 	
 	"""
 	def __init__(self):

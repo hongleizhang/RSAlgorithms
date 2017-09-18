@@ -9,7 +9,7 @@ class SocialRec(MF):
 	"""
 	docstring for SocialRec
 	
-	Ma et al. 2008
+	Ma H, Yang H, Lyu M R, et al. Sorec: social recommendation using probabilistic matrix factorization[C]//Proceedings of the 17th ACM conference on Information and knowledge management. ACM, 2008: 931-940.
 	
 	"""
 	def __init__(self):
@@ -68,3 +68,4 @@ class SocialRec(MF):
 if __name__ == '__main__':
 	src=SocialRec()
 	src.train_model()
+	src.show_rmse()

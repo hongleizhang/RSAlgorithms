@@ -10,7 +10,7 @@ class SocialReg(MF):
 	"""
 	docstring for SocialReg
 	
-	Ma et al. 2011
+	Ma H, Zhou D, Liu C, et al. Recommender systems with social regularization[C]//Proceedings of the fourth ACM international conference on Web search and data mining. ACM, 2011: 287-296.
 	"""
 	def __init__(self):
 		super(SocialReg, self).__init__()

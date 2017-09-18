@@ -9,7 +9,7 @@ class SocialMF(MF):
 	"""
 	docstring for SocialMF
 	
-	Jamali and Ester 2010
+	Jamali M, Ester M. A matrix factorization technique with trust propagation for recommendation in social networks[C]//Proceedings of the fourth ACM conference on Recommender systems. ACM, 2010: 135-142.
 	"""
 	def __init__(self):
 		super(SocialMF, self).__init__()
