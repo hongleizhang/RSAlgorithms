@@ -13,6 +13,9 @@ class FunkSVDwithR(MF):
 
 	def __init__(self):#继承父类的方法
 		super(FunkSVDwithR, self).__init__()
+		# self.lr=0.01
+		# self.lambdaP=0.1
+		# self.lambdaQ=0.1
 		self.init_model()
 
 
@@ -39,10 +42,6 @@ class FunkSVDwithR(MF):
 			iteration += 1
 			if self.isConverged(iteration):
 				break
-
-	# def predict_model(self):
-	# 	super(FunkSVDwithR,self).predict_model()
-	# 	pass
 
 	
 

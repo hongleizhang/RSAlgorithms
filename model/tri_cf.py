@@ -13,9 +13,11 @@ class TriCF(MF):
 	"""
 	def __init__(self):
 		super(TriCF, self).__init__()
-		self.lr=0.01
-		self.config.alpha=0.01
-		self.config.beta=0.01
+		self.config.lr=0.01
+		self.config.alpha=0.02 #0.03
+		self.config.beta=0.02 #0.04
+		self.config.lambdaP=0.1
+		self.config.lambdaQ=0.1
 		self.config.user_near_num=10
 		self.config.item_near_num=10
 		self.init_model()
@@ -59,8 +61,8 @@ class TriCF(MF):
 				error = rating - self.predict(user,item)
 				self.loss += error**2
 				p,q = self.P[u],self.Q[i]
-				#update latent vectors
 				
+				#update latent vectors
 				matchUsers = sorted(self.user_sim[user].items(),key = lambda x:x[1],reverse=True)[:self.config.user_near_num]
 				matchItems = sorted(self.item_sim[item].items(),key = lambda x:x[1],reverse=True)[:self.config.item_near_num]
 
@@ -73,16 +75,20 @@ class TriCF(MF):
 				matchItems=matchItems[:self.config.item_near_num]
 
 				
-				u_near_sum,u_near_total=np.zeros((self.config.factor)),0.0
+				u_near_sum,sim_value_total_u,u_near_total=np.zeros((self.config.factor)),0.0,0.0
+				# print('target user:'+str(user))
 				for x in matchUsers:
 					near_user,sim_value=x
+					# sim_value_total_u+=sim_value
+					# print(near_user,sim_value)
 					near_user_id=self.rg.user[near_user]
 					u_near_sum += sim_value*(self.P[near_user_id] - self.P[u])
 					u_near_total+=sim_value*(sum(pow((self.P[near_user_id] - self.P[u]),2)))
 
-				i_near_sum,i_near_total=np.zeros((self.config.factor)),0.0
+				i_near_sum,sim_value_total_i,i_near_total=np.zeros((self.config.factor)),0.0,0.0
 				for x in matchItems:
 					near_item,sim_value=x
+					# sim_value_total_i+=sim_value
 					near_item_id=self.rg.item[near_item]
 					i_near_sum += sim_value*(self.Q[near_item_id] - self.Q[i])
 					i_near_total+=sim_value*(sum(pow((self.Q[near_item_id] - self.Q[i]),2)))
