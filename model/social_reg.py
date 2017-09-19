@@ -15,6 +15,7 @@ class SocialReg(MF):
 	"""
 	def __init__(self):
 		super(SocialReg, self).__init__()
+		# self.config.lr=0.015
 		self.config.beta=0.02
 		self.tg=TrustGetter()
 		self.init_model()

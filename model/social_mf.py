@@ -14,7 +14,7 @@ class SocialMF(MF):
 	def __init__(self):
 		super(SocialMF, self).__init__()
 
-		self.config.alpha=0.05
+		self.config.alpha=0.5
 		self.tg=TrustGetter() #loading trust data
 		self.init_model()
 
@@ -30,30 +30,39 @@ class SocialMF(MF):
 				error = rating - self.predict(user,item)
 				self.loss += error**2
 				p,q = self.P[u],self.Q[i]
+
+				# total_weight=0
+				social_term = np.zeros(self.config.factor)
+				followees = self.tg.get_followees(user) #获得u所关注的用户列表
+				for followee in followees:
+					weight= followees[followee]
+					if self.rg.containsUser(followee):
+						uk = self.P[self.rg.user[followee]]
+						social_term += weight * uk
+				social_term = p - social_term
+
+
+				social_term_a=np.zeros(self.config.factor)
+				followers = self.tg.get_followers(user)
+				for follower in followers:
+					if self.rg.containsUser(follower):
+						uv = self.P[self.rg.user[follower]]
+						social_term_m=np.zeros(self.config.factor)
+						followees = self.tg.get_followees(follower) #获得u所关注的用户列表
+						for followee in followees:
+							weight= followees[followee]
+							if self.rg.containsUser(followee):
+								uw = self.P[self.rg.user[followee]]
+								social_term_m += weight * uw
+						social_term_a+=uv - social_term_m
+
+
+
 				#update latent vectors
-				self.P[u] += self.config.lr*(error*q-self.config.lambdaP*p)
+				self.P[u] += self.config.lr*(error*q-self.config.alpha*social_term+self.config.alpha*social_term_a -self.config.lambdaP*p)
 				self.Q[i] += self.config.lr*(error*p-self.config.lambdaQ*q)
 
-			for user in self.tg.user:
-				if self.rg.containsUser(user):
-					u=self.rg.user[user]
-					ui=self.P[u]
-					total_weight=0
-					social_term = np.zeros(self.config.factor)
-					followees = self.tg.get_followees(user) #获得u所关注的用户列表
-					for followee in followees:
-						weight= followees[followee]
-						if self.rg.containsUser(followee):
-							uk = self.P[self.rg.user[followee]]
-							social_term += weight * uk
-							total_weight += weight
-					# if total_weight != 0:
-					social_term = ui - social_term#/total_weight
-
-					# update latent vectors
-					self.P[u] -= self.config.lr * self.config.alpha * social_term
-
-					self.loss +=  self.config.alpha *  social_term.dot(social_term)
+				self.loss +=  self.config.alpha * social_term.dot(social_term).sum()
 
 			self.loss+=self.config.lambdaP*(self.P*self.P).sum() + self.config.lambdaQ*(self.Q*self.Q).sum()
 
