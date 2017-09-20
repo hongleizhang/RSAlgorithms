@@ -16,7 +16,7 @@ class RSTE(MF):
 	"""
 	def __init__(self):
 		super(RSTE, self).__init__()
-		self.config.alpha=0.9
+		self.config.alpha=0.4
 		# self.config.lambdaH=0.01
 		self.tg=TrustGetter()
 		self.init_model()
@@ -64,13 +64,13 @@ class RSTE(MF):
 			if self.isConverged(iteration):
 				break
 
-	def get_social_term_Q(self,u,i):
-		if self.rg.containsUser(u) and self.rg.containsItem(i): 
-			i = self.rg.item[i]
-			u = self.rg.user[u]
+	def get_social_term_Q(self,user,item):
+		if self.rg.containsUser(user) and self.rg.containsItem(item): 
+			i = self.rg.item[item]
+			u = self.rg.user[user]
 			social_term_loss = 0
 			social_term=np.zeros(self.config.factor)
-			followees = self.tg.get_followees(u)
+			followees = self.tg.get_followees(user)
 			weights = []
 			indexes = []
 			for followee in followees:
@@ -124,7 +124,7 @@ class RSTE(MF):
 			return self.rg.globalMean
 
 	def get_sim(self,u,k):
-		return (pearson_sp(self.rg.get_row(u), self.rg.get_row(k))+self.tg.weight(u,k))/2.0
+		return (pearson_sp(self.rg.get_row(u), self.rg.get_row(k))+1.0)/2.0
 if __name__ == '__main__':
 	rste=RSTE()
 	rste.train_model()

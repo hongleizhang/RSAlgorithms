@@ -13,9 +13,7 @@ class FunkSVDwithR(MF):
 
 	def __init__(self):#继承父类的方法
 		super(FunkSVDwithR, self).__init__()
-		# self.lr=0.01
-		# self.lambdaP=0.1
-		# self.lambdaQ=0.1
+		# self.lr=0.01 # 0.01 92   0.02 0.85119
 		self.init_model()
 
 

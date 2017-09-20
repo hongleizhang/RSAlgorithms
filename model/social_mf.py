@@ -13,8 +13,8 @@ class SocialMF(MF):
 	"""
 	def __init__(self):
 		super(SocialMF, self).__init__()
-
-		self.config.alpha=0.5
+		self.config.lr=0.01
+		self.config.alpha=1 #0.8溢出
 		self.tg=TrustGetter() #loading trust data
 		self.init_model()
 
@@ -59,7 +59,7 @@ class SocialMF(MF):
 
 
 				#update latent vectors
-				self.P[u] += self.config.lr*(error*q-self.config.alpha*social_term+self.config.alpha*social_term_a -self.config.lambdaP*p)
+				self.P[u] += self.config.lr*(error*q-self.config.alpha*social_term+self.config.alpha*social_term_a -self.config.lambdaP*p) #
 				self.Q[i] += self.config.lr*(error*p-self.config.lambdaQ*q)
 
 				self.loss +=  self.config.alpha * social_term.dot(social_term).sum()

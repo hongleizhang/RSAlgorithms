@@ -15,8 +15,8 @@ class SocialReg(MF):
 	"""
 	def __init__(self):
 		super(SocialReg, self).__init__()
-		# self.config.lr=0.015
-		self.config.beta=0.02
+		self.config.lr=0.01
+		self.config.beta=0.2
 		self.tg=TrustGetter()
 		self.init_model()
 
@@ -27,13 +27,12 @@ class SocialReg(MF):
 		self.user_sim = SimMatrix()
 		print('constructing user-user similarity matrix...')
 
-		for u1 in self.rg.user:
-			for u2 in self.rg.user:
-				if u1!=u2:
-					if self.user_sim.contains(u1,u2):
-						continue
-					sim = self.get_sim(u1,u2)
-					self.user_sim.set(u1,u2,sim)
+		for u in self.rg.user:
+			for f in self.tg.get_followers(u):
+				if self.user_sim.contains(u,f):
+					continue
+				sim = self.get_sim(u,f)
+				self.user_sim.set(u,f,sim)
 
 
 	def get_sim(self,u,k):
@@ -68,7 +67,7 @@ class SocialReg(MF):
 					if self.rg.containsUser(follower):
 						s=self.user_sim[user][follower]
 						ug = self.P[self.rg.user[follower]]
-						social_term_p += s * (p-ug)
+						social_term_m += s * (p-ug)
 
 				#update latent vectors
 				self.P[u] += self.config.lr*(error*q- self.config.beta*(social_term_p+social_term_m) -self.config.lambdaP*p)

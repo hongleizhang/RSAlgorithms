@@ -95,8 +95,8 @@ class MF(object):
 				self.config.lr *= 1.05
 			else:
 				self.config.lr *= 0.5
-		if self.config.lr > 1.0:
-			self.config.lr = 1.0
+		if self.config.lr > 1:
+			self.config.lr = 1
 
 	def show_rmse(self):
 		'''
