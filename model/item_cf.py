@@ -11,11 +11,12 @@ class ItemCF(MF):
 	docstring for ItemCF
 	implement the ItemCF
 
+	Sarwar B, Karypis G, Konstan J, et al. Item-based collaborative filtering recommendation algorithms[C]//Proceedings of the 10th international conference on World Wide Web. ACM, 2001: 285-295.
 	"""
 
 	def __init__(self):#继承父类的方法
 		super(ItemCF, self).__init__()
-		self.config.n=10
+		self.config.n=200
 		self.init_model()
 
 	def init_model(self):

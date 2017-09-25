@@ -7,7 +7,7 @@ Some algorithms about traditional recommendation
 * **FunkSVDwithR**[Simon Funk. 2006]
 * **BiasSVD**[Koren et al. 2009]
 * **SVD++**[Koren et al. 2010]
-* **TriCF**[JunWu et al. 2017][待完成]
+* **TriCF**[YuHe et al. 2017]
 # Social recommendation
 Some algorithms about social recommendation
 

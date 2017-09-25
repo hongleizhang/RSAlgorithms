@@ -140,3 +140,10 @@ class RatingGetter(object):
 
 if __name__ == '__main__':
 	rg=RatingGetter()
+	# for ind,entry in enumerate(rg.testSet()):
+	# 	if ind<80:
+	# 		print(entry)
+	# 		user,item,rating = entry
+	
+	print(len(rg.user))
+	print(len(rg.item))

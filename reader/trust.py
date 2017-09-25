@@ -74,5 +74,5 @@ class TrustGetter(object):
 
 if __name__ == '__main__':
 	tg=TrustGetter()
-	print(tg.matrix_User)
-	print(tg.followers)
+	s=tg.get_followees(2).keys()
+	print(s)

@@ -8,11 +8,12 @@ class FunkSVDwithR(MF):
 	"""
 	docstring for FunkSVDwithR
 	implement the FunkSVD with regularization
-
+	http://sifter.org/~simon/journal/20061211.html
 	"""
 
 	def __init__(self):#继承父类的方法
 		super(FunkSVDwithR, self).__init__()
+		# self.lr=0.01 # 0.01 92   0.02 0.85119
 		self.init_model()
 
 
@@ -40,14 +41,10 @@ class FunkSVDwithR(MF):
 			if self.isConverged(iteration):
 				break
 
-	# def predict_model(self):
-	# 	super(FunkSVDwithR,self).predict_model()
-	# 	pass
-
 	
 
 if __name__ == '__main__':
 	bmf=FunkSVDwithR()
 	bmf.train_model()
-	# bmf.predict_model()
+	bmf.predict_model()
 	bmf.show_rmse()

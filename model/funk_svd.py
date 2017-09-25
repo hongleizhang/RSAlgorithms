@@ -8,6 +8,7 @@ class FunkSVD(MF):
 	docstring for FunkSVD
 	implement the FunkSVD without regularization
 	
+	http://sifter.org/~simon/journal/20061211.html
 	"""
 	def __init__(self):
 		super(FunkSVD, self).__init__()

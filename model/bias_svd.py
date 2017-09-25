@@ -9,10 +9,12 @@ class BiasSVD(MF):
 	"""
 	docstring for BiasSVD
 	implement the BiasSVD
-
+	
+	Koren Y, Bell R, Volinsky C. Matrix factorization techniques for recommender systems[J]. Computer, 2009, 42(8).
 	"""
 	def __init__(self):
 		super(BiasSVD, self).__init__()
+		self.config.lambdaB=0.1 #偏置项系数
 		self.init_model()
 		
 
@@ -37,11 +39,11 @@ class BiasSVD(MF):
 				self.P[u] += self.config.lr*(error*q-self.config.lambdaP*p)
 				self.Q[i] += self.config.lr*(error*p-self.config.lambdaQ*q)
 
-				self.Bu[u] += self.config.lr*(error-self.config.beta*self.Bu[u])
-				self.Bi[i] += self.config.lr*(error-self.config.beta*self.Bi[i])
+				self.Bu[u] += self.config.lr*(error-self.config.lambdaB*self.Bu[u])
+				self.Bi[i] += self.config.lr*(error-self.config.lambdaB*self.Bi[i])
 
 			self.loss+=self.config.lambdaP*(self.P*self.P).sum() + self.config.lambdaQ*(self.Q*self.Q).sum()\
-               +self.config.beta*((self.Bu*self.Bu).sum()+(self.Bi*self.Bi).sum())
+               +self.config.lambdaB*((self.Bu*self.Bu).sum()+(self.Bi*self.Bi).sum())
 			iteration += 1
 			if self.isConverged(iteration):
 				break

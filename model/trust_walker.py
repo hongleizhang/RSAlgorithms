@@ -11,7 +11,7 @@ class TrustWalker(MF):
 	"""
 	docstring for TrustWalker
 	
-	Jamali and Ester 2009
+	Jamali M, Ester M. Trustwalker: a random walk model for combining trust-based and item-based recommendation[C]//Proceedings of the 15th ACM SIGKDD international conference on Knowledge discovery and data mining. ACM, 2009: 397-406.
 	"""
 	def __init__(self):
 		super(TrustWalker, self).__init__()
