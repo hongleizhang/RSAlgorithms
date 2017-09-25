@@ -112,7 +112,7 @@ def pearson_sp(x1,x2):
 				total += (x1[k]-mean1) * (x2[k]-mean2)
 				denom1 += (x1[k]-mean1) ** 2
 				denom2 += (x2[k]-mean2) ** 2
-			return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))
+		return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))
 	except ZeroDivisionError:
 		return 0
 
@@ -124,7 +124,6 @@ def pearson_improved_sp(x1,x2):
 	denom2 = 0
 	nu=0
 	try:
-		#不应该是item的均值
 		mean1 = sum(x1.values())/(len(x1)+0.0)
 		mean2 = sum(x2.values()) / (len(x2) + 0.0)
 		for k in x1:
