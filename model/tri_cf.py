@@ -4,7 +4,7 @@ sys.path.append("..") #将该目录加入到环境变量
 import numpy as np
 from mf import MF
 from utility.matrix import SimMatrix
-from utility.similarity import cosine_sp
+from utility.similarity import pearson_sp
 
 class TriCF(MF):
 	"""
@@ -34,7 +34,7 @@ class TriCF(MF):
 				if u1!=u2:
 					if self.user_sim.contains(u1,u2):
 						continue
-					sim = cosine_sp(self.rg.get_row(u1),self.rg.get_row(u2))
+					sim = pearson_sp(self.rg.get_row(u1),self.rg.get_row(u2))
 					self.user_sim.set(u1,u2,sim)
 
 
@@ -44,7 +44,7 @@ class TriCF(MF):
 				if i1!=i2:
 					if self.item_sim.contains(i1,i2):
 						continue
-					sim = cosine_sp(self.rg.get_col(i1),self.rg.get_col(i2))
+					sim = pearson_sp(self.rg.get_col(i1),self.rg.get_col(i2))
 					self.item_sim.set(i1,i2,sim)
 
 

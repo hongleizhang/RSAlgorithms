@@ -4,7 +4,7 @@ sys.path.append("..") #将该目录加入到环境变量
 
 from mf import MF
 from utility.matrix import SimMatrix
-from utility.similarity import cosine_sp
+from utility.similarity import pearson_sp
 
 class UserCF(MF):
 	"""
@@ -16,7 +16,7 @@ class UserCF(MF):
 
 	def __init__(self):#继承父类的方法
 		super(UserCF, self).__init__()
-		self.config.n=10
+		self.config.n=100
 		self.init_model()
 
 	def init_model(self):
@@ -27,7 +27,7 @@ class UserCF(MF):
 				if u_test!=u_train:
 					if self.user_sim.contains(u_test,u_train):
 						continue
-					sim = cosine_sp(self.rg.get_row(u_test),self.rg.get_row(u_train))
+					sim = pearson_sp(self.rg.get_row(u_test),self.rg.get_row(u_train))
 					self.user_sim.set(u_test,u_train,sim)
 
 	def predict(self,u,i):

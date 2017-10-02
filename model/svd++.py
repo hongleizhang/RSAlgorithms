@@ -15,6 +15,7 @@ class SVDPP(MF):
 	def __init__(self):
 		super(SVDPP, self).__init__()
 		self.config.lambdaY=0.01
+		self.config.beta=0.02
 		self.init_model()
 		
 

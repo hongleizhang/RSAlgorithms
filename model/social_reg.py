@@ -5,7 +5,8 @@ import numpy as np
 from mf import MF
 from reader.trust import TrustGetter
 from utility.matrix import SimMatrix
-from utility.similarity import pearson_sp
+from utility.similarity import pearson_sp,cosine_sp
+from utility import util
 
 class SocialReg(MF):
 	"""
@@ -16,7 +17,7 @@ class SocialReg(MF):
 	def __init__(self):
 		super(SocialReg, self).__init__()
 		self.config.lr=0.01
-		self.config.beta=0.2
+		self.config.beta=0.02
 		self.tg=TrustGetter()
 		self.init_model()
 
@@ -27,17 +28,20 @@ class SocialReg(MF):
 		self.user_sim = SimMatrix()
 		print('constructing user-user similarity matrix...')
 
+		# self.user_sim=util.load_data('../data/sim/ep_cf_soreg08.pkl')
 		for u in self.rg.user:
 			for f in self.tg.get_followers(u):
 				if self.user_sim.contains(u,f):
 					continue
 				sim = self.get_sim(u,f)
+				# print(sim)
 				self.user_sim.set(u,f,sim)
-
+		# print(self.user_sim[4]) #0.9965
+		util.save_data(self.user_sim,'../data/sim/ep_cf_soreg08.pkl')
 
 	def get_sim(self,u,k):
-		return (pearson_sp(self.rg.get_row(u), self.rg.get_row(k))+1.0)/2.0 #为了让范围在[0,1]
-
+		sim=(pearson_sp(self.rg.get_row(u), self.rg.get_row(k))+1.0)/2.0 #为了让范围在[0,1] +1.0)/2.0 0.83626 
+		return sim
 
 	def train_model(self):
 		iteration = 0
@@ -86,4 +90,6 @@ class SocialReg(MF):
 if __name__ == '__main__':
 	srg=SocialReg()
 	srg.train_model()
+	coldrmse=srg.predict_model_cold_users()
+	print('cold start user rmse is :'+str(coldrmse))
 	srg.show_rmse()

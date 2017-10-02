@@ -18,6 +18,7 @@ class MF(object):
 		self.rg=RatingGetter() #loading raing data
 		# self.init_model()
 		self.iter_rmse=[]
+		self.iter_mae=[]
 		pass
 
 	def init_model(self):
@@ -29,7 +30,7 @@ class MF(object):
 	def train_model(self):
 		pass
 
-
+	#test all users in test set
 	def predict_model(self):
 		res=[]
 		for ind,entry in enumerate(self.rg.testSet()):
@@ -44,10 +45,24 @@ class MF(object):
 			# self.dao.testData[ind].append(pred)
 			res.append([user,item,rating,pred])
 		rmse=Metric.RMSE(res)
+		mae=Metric.MAE(res)
 		self.iter_rmse.append(rmse) #for plot
+		self.iter_mae.append(mae)
+		return rmse,mae
+
+	#test cold start users among test set
+	def predict_model_cold_users(self):
+		res=[]
+		for user in self.rg.testColdUserSet_u.keys():
+			for item in self.rg.testColdUserSet_u[user].keys():
+				rating=self.rg.testColdUserSet_u[user][item]
+				pred=self.predict(user,item)
+				#denormalize
+				pred = denormalize(pred,self.config.min_val,self.config.max_val)
+				pred = self.checkRatingBoundary(pred)
+				res.append([user,item,rating,pred])
+		rmse=Metric.RMSE(res)
 		return rmse
-
-
 
 
 	def predict(self,u,i):
@@ -77,8 +92,9 @@ class MF(object):
 		# value = [item.strip()for item in measure]
 		#with open(self.algorName+' iteration.txt')
 		deltaLoss = (self.lastLoss-self.loss)
-		print('%s iteration %d: loss = %.4f, delta_loss = %.5f learning_Rate = %.5f rmse=%.5f' % \
-			(self.__class__,iter,self.loss,deltaLoss,self.config.lr,self.predict_model()))
+		rmse,mae=self.predict_model()
+		print('%s iteration %d: loss = %.4f, delta_loss = %.5f learning_Rate = %.5f rmse=%.5f mae=%.5f' % \
+			(self.__class__,iter,self.loss,deltaLoss,self.config.lr,rmse,mae))
 		#check if converged
 		cond = abs(deltaLoss) < self.config.threshold
 		converged = cond
@@ -104,8 +120,9 @@ class MF(object):
 		'''
 		nums=range(len(self.iter_rmse))
 		plt.plot(nums,self.iter_rmse,label='RMSE')
+		plt.plot(nums,self.iter_mae,label='MAE')
 		plt.xlabel('# of epoch')
-		plt.ylabel('RMSE')
+		plt.ylabel('metric')
 		plt.title(self.__class__)
 		plt.legend()
 		plt.show()

@@ -47,4 +47,6 @@ if __name__ == '__main__':
 	bmf=FunkSVDwithR()
 	bmf.train_model()
 	bmf.predict_model()
-	bmf.show_rmse()
+	coldrmse=bmf.predict_model_cold_users()
+	print('cold start user rmse is :'+str(coldrmse))
+	# bmf.show_rmse()

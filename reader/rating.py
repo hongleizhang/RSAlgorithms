@@ -26,6 +26,8 @@ class RatingGetter(object):
 		self.trainSet_i = defaultdict(dict)
 		self.testSet_u = defaultdict(dict) # used to store the test set by hierarchy user:[item,rating]
 		self.testSet_i = defaultdict(dict) # used to store the test set by hierarchy item:[user,rating]
+		self.testColdUserSet_u=defaultdict(dict) # 用来存储冷启动用户test的rating信息
+		self.trainHotUserSet=[] #训练充足的用户 in train set
 		self.trainSetLength=0
 		self.testSetLength=0
 		
@@ -33,8 +35,10 @@ class RatingGetter(object):
 		self.itemMeans = {} #used to store the mean values of items's ratings
 		self.globalMean = 0
 
-		self.generate_data_set()
-		self.get_data_statistics()
+		self.generate_data_set() #生成训练、测试集
+		self.get_data_statistics() #统计user，item评分均值以及全局均值
+		self.get_cold_start_users() #获得冷启动的user
+		self.get_full_users() #获得训练充分的user
 
 	def generate_data_set(self):
 		for index,line in enumerate(self.trainSet()):
@@ -84,6 +88,22 @@ class RatingGetter(object):
 
 	def get_train_size(self):
 		return (len(self.user),len(self.item))
+
+	#从test set中找cold start users，得结合trainset的评分记录
+	def get_cold_start_users(self):
+		for user in self.testSet_u.keys():
+			rating_length=len(self.trainSet_u[user])
+			if rating_length <= self.config.coldUserRating: #rating info 少于几条
+				self.testColdUserSet_u[user]=self.testSet_u[user]
+		print('cold start users count',len(self.testColdUserSet_u))
+
+	#从train set中得到训练充足的用户，用户学习映射函数
+	def get_full_users(self):
+		for user in self.trainSet_u.keys():
+			rating_length=len(self.trainSet_u[user])
+			if rating_length >= self.config.hotUserRating: #rating info 多于几条
+				self.trainHotUserSet.append(user)
+		pass
 
 	def get_data_statistics(self):
 
@@ -143,7 +163,7 @@ if __name__ == '__main__':
 	# for ind,entry in enumerate(rg.testSet()):
 	# 	if ind<80:
 	# 		print(entry)
-	# 		user,item,rating = entry
+	# # 		user,item,rating = entry
 	
-	print(len(rg.user))
-	print(len(rg.item))
+	# print(rg.trainSet_u[52])
+	# print(rg.trainSet_u[10])

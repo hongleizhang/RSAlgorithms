@@ -13,7 +13,7 @@ class SocialMF(MF):
 	"""
 	def __init__(self):
 		super(SocialMF, self).__init__()
-		self.config.lr=0.01
+		self.config.lr=0.02
 		self.config.alpha=1 #0.8溢出
 		self.tg=TrustGetter() #loading trust data
 		self.init_model()
