@@ -1,0 +1,9 @@
+.git
+*.pyc
+/data/
+
+__pycache__/
+
+__init__.py
+
+/model/social_tri_cf.py
