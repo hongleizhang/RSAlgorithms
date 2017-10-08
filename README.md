@@ -16,4 +16,5 @@ Some algorithms about social recommendation
 * **TrustWalker**[Jamali and Ester. 2009]
 * **SocialMF**[Jamali and Ester 2010]
 * **SocialReg**[Ma et al. 2011]
+* **TrustSVD**[Guo et al. 2015]
 
