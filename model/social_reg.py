@@ -16,7 +16,8 @@ class SocialReg(MF):
 	"""
 	def __init__(self):
 		super(SocialReg, self).__init__()
-		self.config.lr=0.01
+		self.config.lambdaP=0.01
+		self.config.lambdaQ=0.01
 		self.config.beta=0.02
 		self.tg=TrustGetter()
 		self.init_model()
@@ -37,7 +38,7 @@ class SocialReg(MF):
 				# print(sim)
 				self.user_sim.set(u,f,sim)
 		# print(self.user_sim[4]) #0.9965
-		util.save_data(self.user_sim,'../data/sim/ep_cf_soreg08.pkl')
+		# util.save_data(self.user_sim,'../data/sim/ep_cf_soreg04.pkl')
 
 	def get_sim(self,u,k):
 		sim=(pearson_sp(self.rg.get_row(u), self.rg.get_row(k))+1.0)/2.0 #为了让范围在[0,1] +1.0)/2.0 0.83626 

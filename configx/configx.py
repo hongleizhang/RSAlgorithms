@@ -20,12 +20,12 @@ class ConfigX(object):
 
 		#HyperParameter
 		self.coldUserRating=5 #用户评分数少于5条定为cold start users 5,10
-		self.hotUserRating=30 #397个，50 40个，
-		self.factor=15 #隐含因子个数
+		self.hotUserRating=30 #397个，50 40个， 30
+		self.factor=10  #隐含因子个数户 或者5
 		self.threshold=1e-4 #收敛的阈值
-		self.lr=0.02 #学习率
+		self.lr=0.001 #学习率
 		self.maxIter=500
-		self.lambdaP=0.02#0.02
-		self.lambdaQ=0.02#0.02
+		self.lambdaP=0.001#0.02
+		self.lambdaQ=0.001#0.02
 
 		

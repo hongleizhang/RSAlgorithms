@@ -14,8 +14,11 @@ class SVDPP(MF):
 	"""
 	def __init__(self):
 		super(SVDPP, self).__init__()
-		self.config.lambdaY=0.01
-		self.config.beta=0.02
+		self.config.lambdaP=0.1
+		self.config.lambdaQ=0.1
+
+		self.config.lambdaY=0.1
+		self.config.lambdaB=0.1
 		self.init_model()
 		
 
@@ -44,8 +47,8 @@ class SVDPP(MF):
 				self.P[u] += self.config.lr*(error*q-self.config.lambdaP*p)
 				self.Q[i] += self.config.lr*(error*(p+sum_y)-self.config.lambdaQ*q)
 
-				self.Bu[u] += self.config.lr*(error-self.config.beta*self.Bu[u])
-				self.Bi[i] += self.config.lr*(error-self.config.beta*self.Bi[i])
+				self.Bu[u] += self.config.lr*(error-self.config.lambdaB*self.Bu[u])
+				self.Bi[i] += self.config.lr*(error-self.config.lambdaB*self.Bi[i])
 
 				u_items=self.rg.user_rated_items(u)
 				for j in u_items:
@@ -53,7 +56,7 @@ class SVDPP(MF):
 					self.Y[idj]+=self.config.lr*( error/np.sqrt(nu)*q-self.config.lambdaY*self.Y[idj] )
 
 			self.loss+=self.config.lambdaP*(self.P*self.P).sum() + self.config.lambdaQ*(self.Q*self.Q).sum()\
-			   +self.config.beta*((self.Bu*self.Bu).sum()+(self.Bi*self.Bi).sum())+self.config.lambdaY*(self.Y*self.Y).sum()
+			   +self.config.lambdaB*((self.Bu*self.Bu).sum()+(self.Bi*self.Bi).sum())+self.config.lambdaY*(self.Y*self.Y).sum()
 			iteration += 1
 			if self.isConverged(iteration):
 				break

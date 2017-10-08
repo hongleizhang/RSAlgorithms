@@ -4,7 +4,7 @@ sys.path.append("..") #将该目录加入到环境变量
 import numpy as np
 from mf import MF
 from reader.trust import TrustGetter
-from utility.similarity import pearson_sp
+# from utility.similarity import pearson_sp
 
 
 class RSTE(MF):
@@ -16,7 +16,8 @@ class RSTE(MF):
 	"""
 	def __init__(self):
 		super(RSTE, self).__init__()
-		self.config.alpha=0.4
+		# self.maxIter=700
+		self.config.alpha=1.0
 		# self.config.lambdaH=0.01
 		self.tg=TrustGetter()
 		self.init_model()
@@ -82,7 +83,8 @@ class RSTE(MF):
 			indexes = np.array(indexes)
 			if qw!=0:
 				social_term=weights.dot(self.P[indexes])
-				social_term_loss += weights.dot((self.P[indexes].dot(self.Q[i])))
+				social_term/=qw
+				social_term_loss += weights.dot((self.P[indexes].dot(self.Q[i])))/qw
 			return social_term,social_term_loss
 
 	def get_social_term_P(self,user,item):
@@ -106,6 +108,7 @@ class RSTE(MF):
 			if qw!=0:
 				for es in errs*weights:
 					social_term+=es*self.Q[i]
+				social_term/=qw
 				# social_term_loss += weights.dot((self.P[indexes].dot(self.Q[i])))
 			return social_term
 
@@ -123,8 +126,8 @@ class RSTE(MF):
 		else:
 			return self.rg.globalMean
 
-	def get_sim(self,u,k):
-		return (pearson_sp(self.rg.get_row(u), self.rg.get_row(k))+1.0)/2.0
+	# def get_sim(self,u,k):
+	# 	return (pearson_sp(self.rg.get_row(u), self.rg.get_row(k))+1.0)/2.0
 if __name__ == '__main__':
 	rste=RSTE()
 	rste.train_model()

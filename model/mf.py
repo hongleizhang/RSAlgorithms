@@ -98,8 +98,8 @@ class MF(object):
 		#check if converged
 		cond = abs(deltaLoss) < self.config.threshold
 		converged = cond
-		if not converged:
-			self.updateLearningRate(iter)
+		# if not converged:
+		# 	self.updateLearningRate(iter)
 		self.lastLoss = self.loss
 		# shuffle(self.dao.trainingData)
 		return converged

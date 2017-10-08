@@ -16,7 +16,7 @@ class ItemCF(MF):
 
 	def __init__(self):#继承父类的方法
 		super(ItemCF, self).__init__()
-		self.config.n=200
+		self.config.n=10
 		self.init_model()
 
 	def init_model(self):

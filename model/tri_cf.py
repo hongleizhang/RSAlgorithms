@@ -13,11 +13,11 @@ class TriCF(MF):
 	"""
 	def __init__(self):
 		super(TriCF, self).__init__()
-		self.config.lr=0.01
-		self.config.alpha=0.02 #0.03
-		self.config.beta=0.02 #0.04
-		self.config.lambdaP=0.1
-		self.config.lambdaQ=0.1
+		# self.config.lr=0.0001
+		self.config.alpha=0.001 #0.03
+		self.config.beta=0.001 #0.04
+		# self.config.lambdaP=0.1
+		# self.config.lambdaQ=0.1
 		self.config.user_near_num=10
 		self.config.item_near_num=10
 		self.init_model()

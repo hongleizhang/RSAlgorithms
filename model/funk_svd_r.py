@@ -13,7 +13,7 @@ class FunkSVDwithR(MF):
 
 	def __init__(self):#继承父类的方法
 		super(FunkSVDwithR, self).__init__()
-		# self.lr=0.01 # 0.01 92   0.02 0.85119
+		# self.config.lr=0.0001 # 0.01 92   0.02 0.85119
 		self.init_model()
 
 
@@ -49,4 +49,4 @@ if __name__ == '__main__':
 	bmf.predict_model()
 	coldrmse=bmf.predict_model_cold_users()
 	print('cold start user rmse is :'+str(coldrmse))
-	# bmf.show_rmse()
+	bmf.show_rmse()

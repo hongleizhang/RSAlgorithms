@@ -13,8 +13,8 @@ class SocialMF(MF):
 	"""
 	def __init__(self):
 		super(SocialMF, self).__init__()
-		self.config.lr=0.02
-		self.config.alpha=1 #0.8溢出
+		# self.config.lr=0.0001
+		self.config.alpha=0.8 #0.8溢出
 		self.tg=TrustGetter() #loading trust data
 		self.init_model()
 
@@ -31,7 +31,7 @@ class SocialMF(MF):
 				self.loss += error**2
 				p,q = self.P[u],self.Q[i]
 
-				# total_weight=0
+				total_weight=0.0
 				social_term = np.zeros(self.config.factor)
 				followees = self.tg.get_followees(user) #获得u所关注的用户列表
 				for followee in followees:
@@ -39,22 +39,35 @@ class SocialMF(MF):
 					if self.rg.containsUser(followee):
 						uk = self.P[self.rg.user[followee]]
 						social_term += weight * uk
-				social_term = p - social_term
+						total_weight+=weight
+
+				if total_weight!=0:
+					social_term = p - social_term/total_weight
+				# print(social_term)
 
 
 				social_term_a=np.zeros(self.config.factor)
+				total_count=0
 				followers = self.tg.get_followers(user)
 				for follower in followers:
 					if self.rg.containsUser(follower):
+						total_count+=1
 						uv = self.P[self.rg.user[follower]]
 						social_term_m=np.zeros(self.config.factor)
+						total_weight=0.0
 						followees = self.tg.get_followees(follower) #获得u所关注的用户列表
 						for followee in followees:
 							weight= followees[followee]
 							if self.rg.containsUser(followee):
 								uw = self.P[self.rg.user[followee]]
 								social_term_m += weight * uw
-						social_term_a+=uv - social_term_m
+								total_weight+=weight
+						if total_weight!=0:
+							social_term_a+=uv - social_term_m/total_weight
+				if total_count!=0:
+					social_term_a/=total_count
+
+				# print(social_term_a)
 
 
 

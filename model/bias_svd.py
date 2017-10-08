@@ -14,7 +14,7 @@ class BiasSVD(MF):
 	"""
 	def __init__(self):
 		super(BiasSVD, self).__init__()
-		self.config.lambdaB=0.1 #偏置项系数
+		self.config.lambdaB=0.001 #偏置项系数
 		self.init_model()
 		
 
@@ -36,12 +36,13 @@ class BiasSVD(MF):
 				self.loss += error**2
 				p,q = self.P[u],self.Q[i]
 				#update latent vectors
-				self.P[u] += self.config.lr*(error*q-self.config.lambdaP*p)
-				self.Q[i] += self.config.lr*(error*p-self.config.lambdaQ*q)
 
 				self.Bu[u] += self.config.lr*(error-self.config.lambdaB*self.Bu[u])
 				self.Bi[i] += self.config.lr*(error-self.config.lambdaB*self.Bi[i])
-
+				
+				self.P[u] += self.config.lr*(error*q-self.config.lambdaP*p)
+				self.Q[i] += self.config.lr*(error*p-self.config.lambdaQ*q)
+				
 			self.loss+=self.config.lambdaP*(self.P*self.P).sum() + self.config.lambdaQ*(self.Q*self.Q).sum()\
                +self.config.lambdaB*((self.Bu*self.Bu).sum()+(self.Bi*self.Bi).sum())
 			iteration += 1

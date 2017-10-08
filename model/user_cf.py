@@ -16,7 +16,7 @@ class UserCF(MF):
 
 	def __init__(self):#继承父类的方法
 		super(UserCF, self).__init__()
-		self.config.n=100
+		self.config.n=10
 		self.init_model()
 
 	def init_model(self):
