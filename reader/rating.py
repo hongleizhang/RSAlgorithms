@@ -71,23 +71,17 @@ class RatingGetter(object):
         pass
 
     def trainSet(self):
-        np.random.seed(self.config.random_state)
-        with open(self.config.rating_path, 'r') as f:
+        with open(self.config.rating_train_path, 'r') as f:
             for index, line in enumerate(f):
-                rand_num = np.random.rand()
-                if rand_num < self.config.size:
-                    u, i, r = line.strip('\r\n').split(self.config.sep)
-                    r = normalize(float(r))  # scale the rating score to [0-1]
-                    yield (int(u), int(i), float(r))
+                u, i, r = line.strip('\r\n').split(self.config.sep)
+                r = normalize(float(r))  # scale the rating score to [0-1]
+                yield (int(u), int(i), float(r))
 
     def testSet(self):
-        np.random.seed(self.config.random_state)
-        with open(self.config.rating_path, 'r') as f:
+        with open(self.config.rating_test_path, 'r') as f:
             for index, line in enumerate(f):
-                rand_num = np.random.rand()
-                if rand_num >= self.config.size:
-                    u, i, r = line.strip('\r\n').split(self.config.sep)
-                    yield (int(u), int(i), float(r))
+                u, i, r = line.strip('\r\n').split(self.config.sep)
+                yield (int(u), int(i), float(r))
 
     def get_train_size(self):
         return (len(self.user), len(self.item))

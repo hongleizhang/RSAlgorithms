@@ -10,6 +10,8 @@ class ConfigX(object):
         super(ConfigX, self).__init__()
 
         self.rating_path = '../data/ft_ratings.txt'
+        self.rating_train_path = "/home/elics-lee/academicSpace/dataSet/FilmTrust/test_train/train_1.datasets"
+        self.rating_test_path = "/home/elics-lee/academicSpace/dataSet/FilmTrust/test_train/test_1.datasets"
         self.trust_path = '../data/ft_trust.txt'
         self.sep = ' '
         self.random_state = 0
