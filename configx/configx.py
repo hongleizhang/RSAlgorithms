@@ -23,8 +23,8 @@ class ConfigX(object):
 		self.hotUserRating=30 #397个，50 40个， 30
 		self.factor=10  #隐含因子个数户 或者5
 		self.threshold=1e-4 #收敛的阈值
-		self.lr=0.001 #学习率
-		self.maxIter=500
+		self.lr=0.01 #学习率
+		self.maxIter=100
 		self.lambdaP=0.001#0.02
 		self.lambdaQ=0.001#0.02
 

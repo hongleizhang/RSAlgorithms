@@ -18,14 +18,14 @@ class TrustSVD(MF):
 	def __init__(self):
 		super(TrustSVD, self).__init__()
 
-		self.config.lr=0.001
+		# self.config.lr=0.001
 		self.config.lambdaP=0.1
 		self.config.lambdaQ=0.1
 
 		self.config.lambdaB=0.1
 		self.config.lambdaY=0.1
 		self.config.lambdaW=0.1
-		self.config.lambdaT=0.9
+		self.config.lambdaT=0.5
 
 		self.tg=TrustGetter()
 		self.init_model()

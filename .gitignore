@@ -1,9 +1,16 @@
 .git
-*.pyc
-/data/
 
+/data/
+/configx/
 __pycache__/
 
-__init__.py
 
-/model/social_tri_cf.py
+__init__.py
+*.pyc
+funk_svd_r*.py
+social_bi_cf*.py
+*tri_cf*.py
+social_svd*.py
+
+
+

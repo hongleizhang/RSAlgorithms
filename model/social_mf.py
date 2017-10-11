@@ -14,7 +14,7 @@ class SocialMF(MF):
 	def __init__(self):
 		super(SocialMF, self).__init__()
 		# self.config.lr=0.0001
-		self.config.alpha=0.8 #0.8溢出
+		self.config.alpha=1 #0.8 rmse=0.87605
 		self.tg=TrustGetter() #loading trust data
 		self.init_model()
 
@@ -43,7 +43,6 @@ class SocialMF(MF):
 
 				if total_weight!=0:
 					social_term = p - social_term/total_weight
-				# print(social_term)
 
 
 				social_term_a=np.zeros(self.config.factor)
@@ -66,10 +65,6 @@ class SocialMF(MF):
 							social_term_a+=uv - social_term_m/total_weight
 				if total_count!=0:
 					social_term_a/=total_count
-
-				# print(social_term_a)
-
-
 
 				#update latent vectors
 				self.P[u] += self.config.lr*(error*q-self.config.alpha*social_term+self.config.alpha*social_term_a -self.config.lambdaP*p) #
