@@ -1,54 +1,54 @@
-#encoding:utf-8
+# encoding:utf-8
 import sys
-sys.path.append("..") #将该目录加入到环境变量
+
+sys.path.append("..")  # 将该目录加入到环境变量
 
 from mf import MF
 
+
 class FunkSVDwithR(MF):
-	"""
-	docstring for FunkSVDwithR
-	implement the FunkSVD with regularization
-	http://sifter.org/~simon/journal/20061211.html
-	"""
+    """
+    docstring for FunkSVDwithR
+    implement the FunkSVD with regularization
+    http://sifter.org/~simon/journal/20061211.html
+    """
 
-	def __init__(self):#继承父类的方法
-		super(FunkSVDwithR, self).__init__()
-		# self.config.lr=0.0001 # 0.01 92   0.02 0.85119
-		self.config.lambdaP=0.001 #rmse=0.87869 cold=0.92278
-		self.config.lambdaQ=0.001
-		self.init_model()
+    def __init__(self):  # 继承父类的方法
+        super(FunkSVDwithR, self).__init__()
+        # self.config.lr=0.0001 # 0.01 92   0.02 0.85119
+        self.config.lambdaP = 0.001  # rmse=0.87869 cold=0.92278
+        self.config.lambdaQ = 0.001
+        self.init_model()
 
+    # def init_model(self):
+    # 	super(FunkSVDwithR, self).init_model()
 
-	# def init_model(self): 
-	# 	super(FunkSVDwithR, self).init_model()
+    def train_model(self):
+        iteration = 0
+        while iteration < self.config.maxIter:
+            self.loss = 0
+            for index, line in enumerate(self.rg.trainSet()):
+                user, item, rating = line
+                u = self.rg.user[user]
+                i = self.rg.item[item]
+                error = rating - self.predict(user, item)  # self.predict(user,item)
+                self.loss += error ** 2
+                p, q = self.P[u], self.Q[i]
+                # update latent vectors
+                self.P[u] += self.config.lr * (error * q - self.config.lambdaP * p)
+                self.Q[i] += self.config.lr * (error * p - self.config.lambdaQ * q)
 
-	def train_model(self):
-		iteration = 0
-		while iteration < self.config.maxIter:
-			self.loss = 0
-			for index,line in enumerate(self.rg.trainSet()):
-				user, item, rating = line
-				u = self.rg.user[user]
-				i = self.rg.item[item]
-				error = rating - self.predict(user,item)#self.predict(user,item)
-				self.loss += error**2
-				p,q = self.P[u],self.Q[i]
-				#update latent vectors
-				self.P[u] += self.config.lr*(error*q-self.config.lambdaP*p)
-				self.Q[i] += self.config.lr*(error*p-self.config.lambdaQ*q)
+            self.loss += self.config.lambdaP * (self.P * self.P).sum() + self.config.lambdaQ * (self.Q * self.Q).sum()
 
-			self.loss+=self.config.lambdaP*(self.P*self.P).sum() + self.config.lambdaQ*(self.Q*self.Q).sum()
+            iteration += 1
+            if self.isConverged(iteration):
+                break
 
-			iteration += 1
-			if self.isConverged(iteration):
-				break
-
-	
 
 if __name__ == '__main__':
-	bmf=FunkSVDwithR()
-	bmf.train_model()
-	bmf.predict_model()
-	coldrmse=bmf.predict_model_cold_users()
-	print('cold start user rmse is :'+str(coldrmse))
-	bmf.show_rmse()
+    bmf = FunkSVDwithR()
+    bmf.train_model()
+    bmf.predict_model()
+    coldrmse = bmf.predict_model_cold_users()
+    print('cold start user rmse is :' + str(coldrmse))
+    bmf.show_rmse()
