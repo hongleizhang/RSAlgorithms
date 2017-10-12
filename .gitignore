@@ -6,6 +6,7 @@ __pycache__/
 
 
 __init__.py
+configx.py
 *.pyc
 funk_svd_r*.py
 social_bi_cf*.py

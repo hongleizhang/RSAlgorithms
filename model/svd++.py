@@ -17,11 +17,11 @@ class SVDPP(MF):
 
     def __init__(self):
         super(SVDPP, self).__init__()
-        self.config.lambdaP = 0.1
-        self.config.lambdaQ = 0.1
+        self.config.lambdaP = 0.01
+        self.config.lambdaQ = 0.01
 
-        self.config.lambdaY = 0.1
-        self.config.lambdaB = 0.1
+        self.config.lambdaY = 0.01
+        self.config.lambdaB = 0.01
         self.init_model()
 
     def init_model(self):

@@ -47,17 +47,17 @@ class TriCF(MF):
         # 			if self.user_sim.contains(u1,u2):
         # 				continue
         # 			sim = pearson_sp(self.rg.get_row(u1),self.rg.get_row(u2))
-        #			sim=round(sim,5)
+        # 			sim=round(sim,5)
         # 			self.user_sim.set(u1,u2,sim)
-        # util.save_data(self.user_sim,'../data/sim/ft_08_uu_tricf.pkl')
+        # util.save_data(self.user_sim,'../data/sim/ft_08_uu_tricf_cv1.pkl')
 
         # 寻找用户的k近邻
         self.user_k_neibor = util.load_data(
             '../data/neibor/ft_08_uu_' + str(self.config.user_near_num) + '_neibor_tricf.pkl')
         # for user in self.rg.user:
-        # 	matchUsers = sorted(self.user_sim[user].items(),key = lambda x:x[1],reverse=True)[:self.config.user_near_num]
-        # 	matchUsers=matchUsers[:self.config.user_near_num]
-        # 	self.user_k_neibor[user]=dict(matchUsers)
+        #     matchUsers = sorted(self.user_sim[user].items(),key = lambda x:x[1],reverse=True)[:self.config.user_near_num]
+        #     matchUsers=matchUsers[:self.config.user_near_num]
+        #     self.user_k_neibor[user]=dict(matchUsers)
         # util.save_data(self.user_k_neibor,'../data/neibor/ft_08_uu_'+str(self.config.user_near_num)+'_neibor_tricf.pkl')
 
         # 项目
@@ -69,18 +69,18 @@ class TriCF(MF):
         # 			if self.item_sim.contains(i1,i2):
         # 				continue
         # 			sim = pearson_sp(self.rg.get_col(i1),self.rg.get_col(i2))
-        #			sim=round(sim,5)
+        # 			sim=round(sim,5)
         # 			self.item_sim.set(i1,i2,sim)
-        # util.save_data(self.item_sim,'../data/sim/ft_08_ii_tricf.pkl')
+        # util.save_data(self.item_sim,'../data/sim/ft_08_ii_tricf_cv1.pkl')
 
         # 寻找项目的k近邻
         self.item_k_neibor = util.load_data(
             '../data/neibor/ft_08_ii_' + str(self.config.item_near_num) + '_neibor_tricf.pkl')
         # for item in self.rg.item:
-        # 	matchItems = sorted(self.item_sim[item].items(),key = lambda x:x[1],reverse=True)[:self.config.item_near_num]
-        # 	matchItems=matchItems[:self.config.item_near_num]
-        # 	self.item_k_neibor[item]=dict(matchItems)
-        # util.save_data(self.item_k_neibor,'../data/neibor/ft_08_ii_'+str(self.config.item_near_num)+'_neibor_tricf.pkl')
+        #     matchItems = sorted(self.item_sim[item].items(),key = lambda x:x[1],reverse=True)[:self.config.item_near_num]
+        #     matchItems=matchItems[:self.config.item_near_num]
+        #     self.item_k_neibor[item]=dict(matchItems)
+        # util.save_data(self.item_k_neibor,'../data/neibor/ft_08_ii_'+str(self.config.item_near_num)+'_neibor_tricf_cv1.pkl')
         pass
 
     def train_model(self):
@@ -103,16 +103,16 @@ class TriCF(MF):
                 u_near_sum, u_near_total = np.zeros((self.config.factor)), 0.0
                 for suser in matchUsers.keys():
                     near_user, sim_value = suser, matchUsers[suser]
-                    near_user_id = self.rg.user[near_user]
-                    u_near_sum += sim_value * (self.P[near_user_id] - p)
-                    u_near_total += sim_value * (sum(pow((self.P[near_user_id] - p), 2)))
+                    pn = self.P[self.rg.user[near_user]]
+                    u_near_sum += sim_value * (pn - p)
+                    u_near_total += sim_value * ((pn - p).dot(pn - p))
 
                 i_near_sum, i_near_total = np.zeros((self.config.factor)), 0.0
                 for sitem in matchItems:
                     near_item, sim_value = sitem, matchItems[sitem]
-                    near_item_id = self.rg.item[near_item]
-                    i_near_sum += sim_value * (self.Q[near_item_id] - q)
-                    i_near_total += sim_value * (sum(pow((self.Q[near_item_id] - q), 2)))
+                    qn = self.Q[self.rg.item[near_item]]
+                    i_near_sum += sim_value * (qn - q)
+                    i_near_total += sim_value * ((qn - q).dot(qn - q))
 
                 self.P[u] += self.config.lr * (error * q - self.config.lambdaU * u_near_sum - self.config.lambdaP * p)
                 self.Q[i] += self.config.lr * (error * p - self.config.lambdaI * i_near_sum - self.config.lambdaQ * q)

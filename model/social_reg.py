@@ -19,8 +19,8 @@ class SocialReg(MF):
 
     def __init__(self):
         super(SocialReg, self).__init__()
-        self.config.lambdaP = 0.01
-        self.config.lambdaQ = 0.01
+        self.config.lambdaP = 0.001
+        self.config.lambdaQ = 0.001
         self.config.alpha = 0.02
         self.tg = TrustGetter()
         self.init_model()
@@ -31,15 +31,15 @@ class SocialReg(MF):
         self.user_sim = SimMatrix()
         print('constructing user-user similarity matrix...')
 
-        self.user_sim = util.load_data('../data/sim/ft_cf_soreg08.pkl')
+        # self.user_sim = util.load_data('../data/sim/ft_cf_soreg08_cv1.pkl')
 
-    # for u in self.rg.user:
-    # 	for f in self.tg.get_followees(u):
-    # 		if self.user_sim.contains(u,f):
-    # 			continue
-    # 		sim = self.get_sim(u,f)
-    # 		self.user_sim.set(u,f,sim)
-    # util.save_data(self.user_sim,'../data/sim/ft_cf_soreg08.pkl')
+        for u in self.rg.user:
+            for f in self.tg.get_followees(u):
+                if self.user_sim.contains(u,f):
+                    continue
+                sim = self.get_sim(u,f)
+                self.user_sim.set(u,f,sim)
+        # util.save_data(self.user_sim,'../data/sim/ft_cf_soreg08_cv1.pkl')
 
     def get_sim(self, u, k):
         sim = (pearson_sp(self.rg.get_row(u), self.rg.get_row(k)) + 1.0) / 2.0  # 为了让范围在[0,1] +1.0)/2.0 0.83626
@@ -94,4 +94,4 @@ if __name__ == '__main__':
     srg.train_model()
     coldrmse = srg.predict_model_cold_users()
     print('cold start user rmse is :' + str(coldrmse))
-    srg.show_rmse()
+    # srg.show_rmse()

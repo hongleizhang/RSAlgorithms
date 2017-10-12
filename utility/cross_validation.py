@@ -27,7 +27,7 @@ def split_data_set(file_name, split_size, out_dir):
         if count_num == int(each_size):
             count_split += 1
             array_ = np.array(each_split)
-            np.savetxt(out_dir + "/split_" + str(count_split) + '.txt', array_, fmt="%s", delimiter='\t')  # 输出每一份数据
+            np.savetxt(out_dir + "/ft_split_" + str(count_split) + '.txt', array_, fmt="%s", delimiter=',', newline='\r\n')  # 输出每一份数据
             split_all.append(each_split)  # 将每一份数据加入到一个list中
             each_split = []
             count_num = 0
@@ -45,14 +45,14 @@ def generate_train_test(split_data_dir, out_dir):
         # 对其余九份欠抽样构成训练集
         for eachfile2 in list_file:
             if eachfile2 != eachfile1:
-                with open(out_dir + "/train_" + str(cross_now) + ".datasets", 'a') as fw_train:
+                with open(out_dir + "/ft_train_" + str(cross_now) + ".txt", 'a') as fw_train:
                     with open(split_data_dir + '/' + eachfile2, 'r') as one_file:
                         read_lines = one_file.readlines()
                         for one_line in read_lines:
                             fw_train.writelines(one_line)
 
         # 将训练集和测试集文件单独保存起来
-        with open(out_dir + "/test_" + str(cross_now) + ".datasets", 'a') as fw_test:
+        with open(out_dir + "/ft_test_" + str(cross_now) + ".txt", 'a') as fw_test:
             with open(split_data_dir + '/' + eachfile1, 'r') as one_file:
                 read_lines = one_file.readlines()
                 for one_line in read_lines:
@@ -60,13 +60,13 @@ def generate_train_test(split_data_dir, out_dir):
 
 
 def main():
-    data_set_name = '/home/elics-lee/academicSpace/dataSet/FilmTrust/ratings.txt'
-    out_put_dir = '/home/elics-lee/academicSpace/dataSet/FilmTrust/cv_5'
+    data_set_name = '../data/ft_ratings.txt'
+    out_put_dir = '../data/cv/temp'
     cv_size = 5
     split_data_set(data_set_name, cv_size, out_put_dir)
 
     # test generate_train_test function
-    train_test_dir = '/home/elics-lee/academicSpace/dataSet/FilmTrust/test_train'
+    train_test_dir = '../data/cv/ft'
     generate_train_test(out_put_dir, train_test_dir)
 
 

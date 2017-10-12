@@ -36,6 +36,9 @@ def denormalize(rating, minVal=config.min_val, maxVal=config.max_val):
 def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
 
+def sigmoid_deriv(z):
+    return sigmoid(z) * (1.0 - sigmoid(z))
+
 
 def sigmoid_2(z):
     return 1.0 / (1.0 + np.exp(-z / 2.0))
