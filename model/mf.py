@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pylab as plt
-
+from os import listdir
 from metrics.metric import Metric
 from utility.tools import denormalize
 from reader.rating import RatingGetter
 from configx.configx import ConfigX
+from utility.tools import sigmoid
 
 
 class MF(object):
@@ -40,7 +41,8 @@ class MF(object):
         for ind, entry in enumerate(self.rg.testSet()):
             user, item, rating = entry
             # predict
-            prediction = self.predict(user, item)
+            prediction = sigmoid(self.predict(user, item))
+            # prediction = self.predict(user, item)
             # denormalize
             prediction = denormalize(prediction, self.config.min_val, self.config.max_val)
 
@@ -130,3 +132,31 @@ class MF(object):
         plt.legend()
         plt.show()
         pass
+
+    def get_min_rmse(self):
+        return min(self.iter_rmse)
+
+    def get_min_mae(self):
+        return min(self.iter_mae)
+
+    def cross_validation(self):
+        """
+        :return: None
+        """
+        train_dir_list = listdir(self.config.rating_train_path)
+        test_dir_list = listdir(self.config.rating_test_path)
+        train_dir_list.sort()
+        test_dir_list.sort()
+        rmse_result = list()
+        mae_result = list()
+        for train_file, test_file in zip(train_dir_list, test_dir_list):
+            self.__init__()
+            self.config.rating_train = self.config.rating_train_path + train_file
+            self.config.rating_test = self.config.rating_test_path + test_file
+
+            self.train_model()
+            rmse = self.get_min_rmse()
+            mae = self.get_min_mae()
+            rmse_result.append(rmse)
+            mae_result.append(mae)
+        return rmse_result, mae_result
