@@ -4,6 +4,8 @@ import sys
 sys.path.append("..")  # 将该目录加入到环境变量
 
 from mf import MF
+from utility.tools import  sigmoid
+from utility.tools import  sigmoid_derivative
 
 
 class FunkSVDwithR(MF):
@@ -31,12 +33,12 @@ class FunkSVDwithR(MF):
                 user, item, rating = line
                 u = self.rg.user[user]
                 i = self.rg.item[item]
-                error = rating - self.predict(user, item)  # self.predict(user,item)
+                error = rating - sigmoid(self.predict(user, item))  # self.predict(user,item)
                 self.loss += error ** 2
                 p, q = self.P[u], self.Q[i]
                 # update latent vectors
-                self.P[u] += self.config.lr * (error * q - self.config.lambdaP * p)
-                self.Q[i] += self.config.lr * (error * p - self.config.lambdaQ * q)
+                self.P[u] += self.config.lr * (sigmoid_derivative(self.predict(user, item)) * error * q - self.config.lambdaP * p)
+                self.Q[i] += self.config.lr * (sigmoid_derivative(self.predict(user, item)) * error * p - self.config.lambdaQ * q)
 
             self.loss += self.config.lambdaP * (self.P * self.P).sum() + self.config.lambdaQ * (self.Q * self.Q).sum()
 
@@ -47,8 +49,11 @@ class FunkSVDwithR(MF):
 
 if __name__ == '__main__':
     bmf = FunkSVDwithR()
-    bmf.train_model()
-    bmf.predict_model()
-    coldrmse = bmf.predict_model_cold_users()
-    print('cold start user rmse is :' + str(coldrmse))
-    bmf.show_rmse()
+    # bmf.train_model()
+    # bmf.predict_model()
+    # coldrmse = bmf.predict_model_cold_users()
+    # print('cold start user rmse is :' + str(coldrmse))
+    # bmf.show_rmse()
+    rmse, mae = bmf.cross_validation()
+    print(rmse)
+    print(mae)
