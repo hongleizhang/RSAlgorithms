@@ -43,3 +43,22 @@ def show_rmse():
 
 
 show_rmse()
+
+
+def plot_para(para, title, y_label):
+    """
+    show figure for rmse and epoch
+    :param para:
+    :param title:
+    :param y_label:
+    :return:
+    """
+    nums = range(len(para))
+    plt.plot(nums, para, label=y_label)
+    plt.xlabel('# of epoch')
+    plt.ylabel(y_label)
+    plt.title(title)
+    plt.legend()
+    plt.savefig("../result/%s.png" % title)
+    plt.close()
+    pass
