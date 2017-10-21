@@ -62,22 +62,21 @@ def common(x1, x2):
 # x1,x2 is the form of dict.
 
 def cosine_sp(x1, x2):
-    'x1,x2 are dicts,this version is for sparse representation'
+    """
+    x1,x2 are dicts,this version is for sparse representation
+
+    """
     total = 0
     denom1 = 0
     denom2 = 0
-    # x1_l,x2_l=len(x1),len(x2)
-    # if x2_l>x1_l:
-    # x1,x2=x2,x1
     for k in x1:
         if k in x2:
             total += x1[k] * x2[k]
             denom1 += x1[k] ** 2
-            denom2 += x2[k] ** 2  # .pop(k)
-        # else:
-        # denom1+=x1[k]**2
-    # for j in x2:
-    # 	denom2+=x2[j]**2
+        else:
+            denom1 += x1[k]**2
+    for k in x2:
+        denom2 += x2[k]**2
     try:
         return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))
     except ZeroDivisionError:
