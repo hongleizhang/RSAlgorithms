@@ -11,6 +11,9 @@ class ConfigX(object):
 
         self.rating_path = '../data/ft_ratings.txt'
         self.trust_path = '../data/ft_trust.txt'
+        self.train_file = ''
+        self.test_file = ''
+        self.is_cross_validation = False
         self.sep = ' '
         self.random_state = 0
         self.size = 0.8  # 0.8 0.7 0.6 0.5 0.4
@@ -26,3 +29,15 @@ class ConfigX(object):
         self.maxIter = 100
         self.lambdaP = 0.001  # 0.02
         self.lambdaQ = 0.001  # 0.02
+
+    def set_rating_path(self, path):
+        self.rating_path = path
+
+    def set_train_file(self, file):
+        self.train_file = file
+
+    def set_test_file(self, file):
+        self.test_file = file
+
+    def set_cross_validation(self, is_cross=False):
+        self.is_cross_validation = is_cross
