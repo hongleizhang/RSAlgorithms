@@ -1,3 +1,10 @@
+特此总结传统与社交之推荐方法，如若有识之士欲共谋此事，欢迎骚扰。
+
+我的主页[Honglei Zhang](http://midas.bjtu.edu.cn/Home/MemberStudent/27)
+
+我的知乎[张小磊](https://www.zhihu.com/people/hongleizhang)
+
+
 # Traditional recommendation
 Some algorithms about traditional recommendation
 
@@ -17,4 +24,3 @@ Some algorithms about social recommendation
 * **SocialMF**[Jamali and Ester 2010]
 * **SocialReg**[Ma et al. 2011]
 * **TrustSVD**[Guo et al. 2015]
-
