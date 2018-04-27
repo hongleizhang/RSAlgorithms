@@ -65,12 +65,12 @@ Guo, Guibing, Jie Zhang, and Neil Yorke-Smith. "TrustSVD: Collaborative Filterin
 * pandas==0.22.0
 * matplotlib==2.2.2
 
+## Code Structure
 
 ## Parameters Settings
-
 If you want to change the default hyparameters, you can set it in `configx.py`. The meanings of the hyparameters is as follows:
 
-#### Dataset parameters
+#### Dataset Parameters
 
 `dataset_name`: the short name of dataset, the default value is `ft`.
 
