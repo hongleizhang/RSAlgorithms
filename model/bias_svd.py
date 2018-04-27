@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 
 import numpy as np
 from mf import MF

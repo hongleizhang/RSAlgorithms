@@ -1,11 +1,11 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
-
+sys.path.append("..")
+from prettyprinter import cpprint
 from mf import MF
 from utility.matrix import SimMatrix
-from utility.similarity import cosine_sp
+from utility.similarity import cosine_sp, pearson_sp
 
 
 class ItemCF(MF):
@@ -16,9 +16,9 @@ class ItemCF(MF):
     Sarwar B, Karypis G, Konstan J, et al. Item-based collaborative filtering recommendation algorithms[C]//Proceedings of the 10th international conference on World Wide Web. ACM, 2001: 285-295.
     """
 
-    def __init__(self):  # 继承父类的方法
+    def __init__(self):
         super(ItemCF, self).__init__()
-        self.config.n = 10
+        self.config.n = 50
         self.init_model()
 
     def init_model(self):
@@ -29,10 +29,19 @@ class ItemCF(MF):
                 if i_test != i_train:
                     if self.item_sim.contains(i_test, i_train):
                         continue
-                    sim = cosine_sp(self.rg.get_col(i_test), self.rg.get_col(i_train))
+                    sim = pearson_sp(self.rg.get_col(i_test), self.rg.get_col(i_train))
                     self.item_sim.set(i_test, i_train, sim)
 
     def predict(self, u, i):
+
+        # item_sim=dict()
+        # for i_train in self.rg.item:
+        #     if i != i_train:
+        #         if i_train in item_sim :
+        #             continue
+        #         sim=cosine_sp(self.rg.get_col(i), self.rg.get_col(i_train))
+        #         item_sim[i_train]=sim
+
         matchItems = sorted(self.item_sim[i].items(), key=lambda x: x[1], reverse=True)
         itemCount = self.config.n
         if itemCount > len(matchItems):
@@ -51,6 +60,7 @@ class ItemCF(MF):
                 return self.rg.globalMean
             return self.rg.itemMeans[i]
         pred = self.rg.itemMeans[i] + sum / float(denom)
+        # print('finished user:'+str(u)+" item:"+str(i))
         return pred
         pass
 
@@ -58,3 +68,5 @@ class ItemCF(MF):
 if __name__ == '__main__':
     ic = ItemCF()
     print(ic.predict_model())
+    print(ic.predict_model_cold_users())
+    cpprint(ic.config.__dict__)

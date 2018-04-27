@@ -1,7 +1,12 @@
+# encoding:utf-8
 import math
 
 
 class Metric(object):
+    '''
+    the two metrics to measure the prediction accuracy for rating prediction task
+    '''
+
     def __init__(self):
         pass
 

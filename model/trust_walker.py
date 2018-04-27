@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 import numpy as np
 from mf import MF
 from utility.tools import sigmoid_2
@@ -29,29 +29,29 @@ class TrustWalker(MF):
     def single_random_walk(self, user=5, item=3, k=0):
         print(user, item, k)
         print('%s%d' % ('k=', k))
-        if self.rg.containsUserItem(user, item):  # 判断用户user是否对item评分，若评分则返回r
+        if self.rg.containsUserItem(user, item):  # judge whether user u rate on item i, if so, return the rating.
             return self.p, self.rg.trainSet_u[user][item]
         else:
-            rand_num = np.random.rand(1)  # 获取随机数
-            # 计算停止概率
+            rand_num = np.random.rand(1)  # get random number
+            # compute the stop probability
             stop_prob, max_item, p_j = self.get_stop_prob(user, item, k)
             print('stop probability:' + str(stop_prob))
             # print('%s%d'%('stop probbability:',stop_prob))
-            # 停止游走的概率
+            # the probability of stopping walk
             print(rand_num, stop_prob)
-            if rand_num < stop_prob or k >= 6:  # （不超过6步）
-                # 获取相似项目j，然后返回r(u,j)
+            if rand_num < stop_prob or k >= 6:  # no more than six steps
+                # get the most similar item j, and return r(u,j)
                 rating = self.rg.trainSet_u[user][max_item]
                 self.p = self.p * stop_prob * p_j
                 return (self.p, rating)
-            # 获取继续游走的概率
+            # compute the probability of next random walk
             else:
-                # 得到下一个游走的用户v
-                next_user, tu_prob = self.get_followee_user(user)  # 对于user在信任网络中没有朋友的情况
+                # get next user for random walk
+                next_user, tu_prob = self.get_followee_user(user)  # if user don't have friends in trust network
                 print('next step user is:' + str(next_user))
-                if next_user == None:  # 不存在下一个用户的情况
-                    _, max_item, p_j = self.get_stop_prob(user, item, -1)  # k=-1无意义
-                    if max_item == 0:  # 没有一个用户并且不存在相似的用户的情况
+                if next_user == None:  # if no next user
+                    _, max_item, p_j = self.get_stop_prob(user, item, -1)  # no sense if k=-1
+                    if max_item == 0:  # if no next user and no similar users
                         return self.p, 0
                     rating = self.rg.trainSet_u[user][max_item]
                     self.p = self.p * p_j
@@ -67,7 +67,7 @@ class TrustWalker(MF):
         num_foll = len(followees)
         if num_foll == 0:
             return None, 0
-        # 随机选一个
+        # pick one randomly
         ind = np.random.randint(num_foll)
         p = 1.0 / num_foll
         return followees[ind], p
@@ -90,11 +90,11 @@ class TrustWalker(MF):
 
     def get_stop_prob(self, user, item, k):
         p = 1.0
-        sum_sim = 0.0  # 用于计算P(Y=j)-分母
-        max_sim = 0  # 用于计算P(Y=j)-分子
-        max_prob = 0.0  # 用于计算停止概率
-        max_prob_item = 0  # 用于方便选择相似item-j
-        if k == 0:  # k==0时，停留概率为0
+        sum_sim = 0.0
+        max_sim = 0
+        max_prob = 0.0
+        max_prob_item = 0
+        if k == 0:  # if k==0，the stop probability=0
             self.p = 1.0
             return 0, 0, 0
 
@@ -120,5 +120,5 @@ class TrustWalker(MF):
 
 if __name__ == '__main__':
     tw = TrustWalker()
-    s = tw.single_random_walk(16, 235)  # 1,8 由于user1没有trust信息，所以不存在其他用户
+    s = tw.single_random_walk(16, 235)  # test on user 16 and item 235
     print(s)

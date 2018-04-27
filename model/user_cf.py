@@ -1,8 +1,8 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
-
+sys.path.append("..")
+from prettyprinter import cpprint
 from mf import MF
 from utility.matrix import SimMatrix
 from utility.similarity import pearson_sp
@@ -16,12 +16,13 @@ class UserCF(MF):
     Resnick P, Iacovou N, Suchak M, et al. GroupLens: an open architecture for collaborative filtering of netnews[C]//Proceedings of the 1994 ACM conference on Computer supported cooperative work. ACM, 1994: 175-186.
     """
 
-    def __init__(self):  # 继承父类的方法
+    def __init__(self):
         super(UserCF, self).__init__()
         self.config.n = 10
-        self.init_model()
+        # self.init_model(k)
 
-    def init_model(self):
+    def init_model(self, k):
+        super(UserCF, self).init_model(k)
         self.user_sim = SimMatrix()
 
         for u_test in self.rg.testSet_u:
@@ -56,4 +57,9 @@ class UserCF(MF):
 
 if __name__ == '__main__':
     uc = UserCF()
+    uc.init_model(0)
     print(uc.predict_model())
+    print(uc.predict_model_cold_users())
+    uc.init_model(1)
+    print(uc.predict_model())
+    print(uc.predict_model_cold_users())

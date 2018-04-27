@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 import numpy as np
 from mf import MF
 from reader.trust import TrustGetter
@@ -35,7 +35,7 @@ class SocialMF(MF):
 
                 total_weight = 0.0
                 social_term = np.zeros(self.config.factor)
-                followees = self.tg.get_followees(user)  # 获得u所关注的用户列表
+                followees = self.tg.get_followees(user)  # get user u's focus lsit
                 for followee in followees:
                     weight = followees[followee]
                     if self.rg.containsUser(followee):
@@ -55,7 +55,7 @@ class SocialMF(MF):
                         uv = self.P[self.rg.user[follower]]
                         social_term_m = np.zeros(self.config.factor)
                         total_weight = 0.0
-                        followees = self.tg.get_followees(follower)  # 获得u所关注的用户列表
+                        followees = self.tg.get_followees(follower)
                         for followee in followees:
                             weight = followees[followee]
                             if self.rg.containsUser(followee):
@@ -69,7 +69,7 @@ class SocialMF(MF):
 
                 # update latent vectors
                 self.P[u] += self.config.lr * (
-                error * q - self.config.alpha * social_term + self.config.alpha * social_term_a - self.config.lambdaP * p)  #
+                        error * q - self.config.alpha * social_term + self.config.alpha * social_term_a - self.config.lambdaP * p)  #
                 self.Q[i] += self.config.lr * (error * p - self.config.lambdaQ * q)
 
                 self.loss += self.config.alpha * social_term.dot(social_term).sum()
@@ -84,3 +84,4 @@ class SocialMF(MF):
 if __name__ == '__main__':
     smf = SocialMF()
     smf.train_model()
+    print(smf.predict_model_cold_users())

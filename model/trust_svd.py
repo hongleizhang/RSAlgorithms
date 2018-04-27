@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 
 import math
 import numpy as np
@@ -20,7 +20,7 @@ class TrustSVD(MF):
     def __init__(self):
         super(TrustSVD, self).__init__()
 
-        self.config.lr = 0.005
+        self.config.lr = 0.01  # 0.005
         self.config.maxIter = 100
         self.config.lambdaP = 1.2
         self.config.lambdaQ = 1.2
@@ -31,18 +31,19 @@ class TrustSVD(MF):
         self.config.lambdaT = 0.9
 
         self.tg = TrustGetter()
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
-        super(TrustSVD, self).init_model()
+    def init_model(self, k):
+        super(TrustSVD, self).init_model(k)
         self.Bu = np.random.rand(self.rg.get_train_size()[0]) / (self.config.factor ** 0.5)  # bias value of user
         self.Bi = np.random.rand(self.rg.get_train_size()[1]) / (self.config.factor ** 0.5)  # bias value of item
         self.Y = np.random.rand(self.rg.get_train_size()[1], self.config.factor) / (
-        self.config.factor ** 0.5)  # implicit preference
+                self.config.factor ** 0.5)  # implicit preference
         self.W = np.random.rand(self.rg.get_train_size()[0], self.config.factor) / (
-        self.config.factor ** 0.5)  # implicit preference
+                self.config.factor ** 0.5)  # implicit preference
 
-    def train_model(self):
+    def train_model(self, k):
+        super(TrustSVD, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -77,20 +78,21 @@ class TrustSVD(MF):
                         self.loss += err ** 2
                         ws += err * w
                         self.W[vid] += self.config.lr * (
-                        err * frac(nv) * q - self.config.lambdaT * err * p - self.config.lambdaW * frac(nw) * w)  # 更新w
+                                err * frac(nv) * q - self.config.lambdaT * err * p - self.config.lambdaW * frac(
+                            nw) * w)  # 更新w
                 self.P[u] += self.config.lr * (error * q - self.config.lambdaT * ws - (
-                self.config.lambdaP * frac(nu) + self.config.lambdaT * frac(nv)) * p)
+                        self.config.lambdaP * frac(nu) + self.config.lambdaT * frac(nv)) * p)
 
-                u_items = self.rg.user_rated_items(u)  # 更新y
+                u_items = self.rg.user_rated_items(u)
                 for j in u_items:
                     idj = self.rg.item[j]
                     self.Y[idj] += self.config.lr * (
-                    error * frac(nu) * q - self.config.lambdaY * frac(nv) * self.Y[idj])
+                            error * frac(nu) * q - self.config.lambdaY * frac(nv) * self.Y[idj])
 
             self.loss += self.config.lambdaP * (self.P * self.P).sum() + self.config.lambdaQ * (self.Q * self.Q).sum() \
                          + self.config.lambdaB * (
-            (self.Bu * self.Bu).sum() + (self.Bi * self.Bi).sum()) + self.config.lambdaY * (
-            self.Y * self.Y).sum() + self.config.lambdaW * (self.W * self.W).sum()
+                                 (self.Bu * self.Bu).sum() + (self.Bi * self.Bi).sum()) + self.config.lambdaY * (
+                                 self.Y * self.Y).sum() + self.config.lambdaW * (self.W * self.W).sum()
             iteration += 1
             if self.isConverged(iteration):
                 break
@@ -102,6 +104,10 @@ class TrustSVD(MF):
             u = self.rg.user[u]
             i = self.rg.item[i]
             return self.Q[i].dot(self.P[u] + sum_y + sum_w) + self.rg.globalMean + self.Bi[i] + self.Bu[u]
+        elif self.rg.containsUser(u) and not self.rg.containsItem(i):
+            return self.rg.userMeans[u]
+        elif not self.rg.containsUser(u) and self.rg.containsItem(i):
+            return self.rg.itemMeans[i]
         else:
             return self.rg.globalMean
 
@@ -128,7 +134,7 @@ class TrustSVD(MF):
 
 if __name__ == '__main__':
     bmf = TrustSVD()
-    bmf.train_model()
+    bmf.train_model(0)
     coldrmse = bmf.predict_model_cold_users()
     print('cold start user rmse is :' + str(coldrmse))
     bmf.show_rmse()

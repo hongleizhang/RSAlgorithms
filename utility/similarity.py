@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 import numpy as np
 from math import sqrt
 from utility.tools import sigmoid_2
@@ -102,21 +102,46 @@ def cosine_improved_sp(x1, x2):
         return 0
 
 
+# def pearson_sp(x1, x2):
+#     total = 0
+#     denom1 = 0
+#     denom2 = 0
+#     try:
+#         mean1 = sum(x1.values()) / (len(x1) + 0.0)
+#         mean2 = sum(x2.values()) / (len(x2) + 0.0)
+#         for k in x1:
+#             if k in x2:
+#                 total += (x1[k] - mean1) * (x2[k] - mean2)
+#                 denom1 += (x1[k] - mean1) ** 2
+#                 denom2 += (x2[k] - mean2) ** 2
+#         return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))
+#     except ZeroDivisionError:
+#         return 0
+
+# improved pearson
 def pearson_sp(x1, x2):
-    total = 0
-    denom1 = 0
-    denom2 = 0
-    try:
-        mean1 = sum(x1.values()) / (len(x1) + 0.0)
-        mean2 = sum(x2.values()) / (len(x2) + 0.0)
-        for k in x1:
-            if k in x2:
-                total += (x1[k] - mean1) * (x2[k] - mean2)
-                denom1 += (x1[k] - mean1) ** 2
-                denom2 += (x2[k] - mean2) ** 2
-        return (total + 0.0) / (sqrt(denom1) * sqrt(denom2))
-    except ZeroDivisionError:
+    common = set(x1.keys()) & set(x2.keys())
+    if len(common) == 0:
         return 0
+    ratingList1 = []
+    ratingList2 = []
+    for i in common:
+        ratingList1.append(x1[i])
+        ratingList2.append(x2[i])
+    if len(ratingList1) == 0 or len(ratingList2) == 0:
+        return 0
+    avg1 = sum(ratingList1) / len(ratingList1)
+    avg2 = sum(ratingList2) / len(ratingList2)
+    mult = 0.0
+    sum1 = 0.0
+    sum2 = 0.0
+    for i in range(len(ratingList1)):
+        mult += (ratingList1[i] - avg1) * (ratingList2[i] - avg2)
+        sum1 += pow(ratingList1[i] - avg1, 2)
+        sum2 += pow(ratingList2[i] - avg2, 2)
+    if sum1 == 0 or sum2 == 0:
+        return 0
+    return mult / (sqrt(sum1) * sqrt(sum2))
 
 
 # TrustWalker userd

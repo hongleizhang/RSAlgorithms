@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 from mf import MF
 
 
@@ -15,9 +15,10 @@ class FunkSVD(MF):
 
     def __init__(self):
         super(FunkSVD, self).__init__()
-        self.init_model()
+        # self.init_model(0)
 
-    def train_model(self):
+    def train_model(self, k):
+        super(FunkSVD, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -38,6 +39,16 @@ class FunkSVD(MF):
 
 
 if __name__ == '__main__':
+
+    rmses = []
     bmf = FunkSVD()
-    bmf.train_model()
-    bmf.predict_model()
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(bmf.config.k_fold_num):
+        bmf.train_model(i)
+        rmse, mae = bmf.predict_model()
+        rmses.append(rmse)
+    print(rmses)
+    # bmf.config.k_current = 1
+    # print(bmf.rg.trainSet_u[1])
+    # bmf.train_model()
+    # bmf.predict_model()

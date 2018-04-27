@@ -1,74 +1,75 @@
-# encoding = utf-8
+# encoding:utf-8
+import sys
+
+sys.path.append("..")
 import os
 import numpy as np
+import pandas as pd
+from scipy.sparse import coo_matrix
+from configx.configx import ConfigX
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Split ratings into five folds
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
-def split_data_set(file_name, split_size, out_dir):
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-    fr = open(file_name, 'r')  # open fileName to read
-    onefile = fr.readlines()
-    num_line = len(onefile)
-    arr = np.arange(num_line)  # get a seq and set len=numLine
-    np.random.shuffle(arr)  # generate a random seq from arr
-    list_all = arr.tolist()
-    each_size = (num_line + 1) / split_size  # size of each split sets
-    split_all = []
-    each_split = []
-    # count_num 统计每次遍历的当前个数
-    count_num = 0
-    # count_split 统计切分次数
-    count_split = 0
+def split_5_folds(configx):
+    K = configx.k_fold_num
+    names = ['user_id', 'item_id', 'rating']
+    if not os.path.isfile(configx.rating_path):
+        print("the format of rating data is wrong")
+        sys.exit()
+    df = pd.read_csv(configx.rating_path, sep=configx.sep, names=names)
+    ratings = coo_matrix((df.rating, (df.user_id, df.item_id)))
+    users = np.unique(ratings.row)
+    ratings = ratings.tocsr()
 
-    # 遍历整个数字序列
-    for i in range(len(list_all)):
-        each_split.append(onefile[int(list_all[i])].strip())
-        count_num += 1
-        if count_num == int(each_size):
-            count_split += 1
-            array_ = np.array(each_split)
-            np.savetxt(out_dir + "/ft_split_" + str(count_split) + '.txt', array_, fmt="%s", delimiter=',', newline='\r\n')  # 输出每一份数据
-            split_all.append(each_split)  # 将每一份数据加入到一个list中
-            each_split = []
-            count_num = 0
-    return split_all
+    rows = list()
+    cols = list()
+    vals = list()
+    nonzeros = list()
 
+    for k in range(K):
+        size_of_bucket = int(ratings.nnz / K)
+        if k == K - 1:
+            size_of_bucket += ratings.nnz % K
+        rows.append(np.zeros(size_of_bucket))
+        cols.append(np.zeros(size_of_bucket))
+        vals.append(np.zeros(size_of_bucket))
+        nonzeros.append(0)
 
-def generate_train_test(split_data_dir, out_dir):
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-    list_file = os.listdir(split_data_dir)
-    cross_now = 0
-    for eachfile1 in list_file:
-        # 记录当前的交叉次数
-        cross_now += 1
-        # 对其余九份欠抽样构成训练集
-        for eachfile2 in list_file:
-            if eachfile2 != eachfile1:
-                with open(out_dir + "/ft_train_" + str(cross_now) + ".txt", 'a') as fw_train:
-                    with open(split_data_dir + '/' + eachfile2, 'r') as one_file:
-                        read_lines = one_file.readlines()
-                        for one_line in read_lines:
-                            fw_train.writelines(one_line)
+    for i, user in enumerate(users):
+        items = ratings[user, :].indices
+        rating_vals = ratings[user, :].data
+        index_list = [i for i in range(K)] * int(len(items) / float(K) + 1)
+        np.random.shuffle(index_list)
+        index_list = np.array(index_list)
 
-        # 将训练集和测试集文件单独保存起来
-        with open(out_dir + "/ft_test_" + str(cross_now) + ".txt", 'a') as fw_test:
-            with open(split_data_dir + '/' + eachfile1, 'r') as one_file:
-                read_lines = one_file.readlines()
-                for one_line in read_lines:
-                    fw_test.writelines(one_line)
+        for k in range(K):
+            k_index_list = (index_list[:len(items)] == k)
+            from_ind = nonzeros[k]
+            to_ind = nonzeros[k] + sum(k_index_list)
 
+            if to_ind >= len(rows[k]):
+                rows[k] = np.append(rows[k], np.zeros(size_of_bucket))
+                cols[k] = np.append(cols[k], np.zeros(size_of_bucket))
+                vals[k] = np.append(vals[k], np.zeros(size_of_bucket))
+                k_index_list = (index_list[:len(items)] == k)
 
-def main():
-    data_set_name = '../data/ft_ratings.txt'
-    out_put_dir = '../data/cv/temp'
-    cv_size = 5
-    split_data_set(data_set_name, cv_size, out_put_dir)
+            rows[k][from_ind:to_ind] = [user] * sum(k_index_list)
+            cols[k][from_ind:to_ind] = items[k_index_list]
+            vals[k][from_ind:to_ind] = rating_vals[k_index_list]
+            nonzeros[k] += sum(k_index_list)
 
-    # test generate_train_test function
-    train_test_dir = '../data/cv/ft'
-    generate_train_test(out_put_dir, train_test_dir)
+    for k, (row, col, val, nonzero) in enumerate(zip(rows, cols, vals, nonzeros)):
+        bucket_df = pd.DataFrame({'user': row[:nonzero], 'item': col[:nonzero], 'rating': val[:nonzero]},
+                                 columns=['user', 'item', 'rating'])
+        bucket_df.to_csv("../data/cv/%s-%d.csv" % (configx.dataset_name, k), sep=configx.sep, header=False, index=False)
+        print("%s -fold%d data generated finished!" % (configx.dataset_name, k))
+
+    print("All Data Generated Done!")
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    configx = ConfigX()
+    split_5_folds(configx)

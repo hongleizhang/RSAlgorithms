@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")  # add current path into environment variable
 import numpy as np
 from mf import MF
 from reader.trust import TrustGetter
@@ -21,7 +21,7 @@ class RSTE(MF):
     def __init__(self):
         super(RSTE, self).__init__()
         # self.maxIter=700
-        self.config.alpha = 1.0
+        self.config.alpha = 0.5
         # self.config.lambdaH=0.01
         self.tg = TrustGetter()
         self.init_model()
@@ -38,7 +38,6 @@ class RSTE(MF):
     # 			pass
     # 		else:
     # 			self.Sim[user][k]=self.get_sim(user,k)
-
 
     def train_model(self):
         iteration = 0
@@ -138,4 +137,5 @@ class RSTE(MF):
 if __name__ == '__main__':
     rste = RSTE()
     rste.train_model()
-    rste.show_rmse()
+    # rste.show_rmse()
+    print(rste.predict_model_cold_users())

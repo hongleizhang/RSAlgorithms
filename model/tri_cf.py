@@ -1,125 +1,158 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 import numpy as np
 from mf import MF
+from prettyprinter import cpprint
+from collections import defaultdict
+from prettyprinter import cpprint
 from utility.matrix import SimMatrix
 from utility.similarity import pearson_sp
 from utility import util
 
 
-class TriCF(MF):
+class TriCFBias(MF):
     """
-    docstring for TriCF
+    docstring for TriCFBias
 
     """
 
     def __init__(self):
-        super(TriCF, self).__init__()
+        super(TriCFBias, self).__init__()
         # self.config.lr=0.001
-        self.config.lambdaU = 0.002  # 0.001 alpha->lambdaU #平滑项系数
-        self.config.lambdaI = 0.002  # 0.001  beta-> lambdaI
+        self.config.lambdaU = 0.002
+        self.config.lambdaI = 0.001
 
-        self.config.lambdaP = 0.05  # 0.05
-        self.config.lambdaQ = 0.05  # 0.05
-        self.config.user_near_num = 10  # 10
-        self.config.item_near_num = 10  # 10
+        self.config.lambdaP = 0.02
+        self.config.lambdaQ = 0.03
+        self.config.lambdaB = 0.01
+
+        self.config.user_near_num = 50
+        self.config.item_near_num = 50
         self.init_model()
 
     def init_model(self):
-        super(TriCF, self).init_model()
+        super(TriCFBias, self).init_model()
+        self.Bu = np.random.rand(self.rg.get_train_size()[0])  # bias value of user
+        self.Bi = np.random.rand(self.rg.get_train_size()[1])  # bais value of item
         self.build_user_item_sim_CF()
 
-    # 通过UI矩阵构建user，item的相似度以及k近邻
+    # construct the u-u,i-i similarity matirx and their's k neighbors
     def build_user_item_sim_CF(self):
         from collections import defaultdict
-        self.user_sim = SimMatrix()  # 保存用户相似度矩阵-UI
-        self.item_sim = SimMatrix()  # 保存项目相似度矩阵-UI
-        self.user_k_neibor = defaultdict(dict)  # 保存用户k近邻
-        self.item_k_neibor = defaultdict(dict)  # 保存项目k近邻
-        # 用户
-        # print('constructing user-user similarity matrix...')
-        self.user_sim = util.load_data('../data/sim/ft_08_uu_tricf.pkl')
-        # for u1 in self.rg.user:
-        # 	for u2 in self.rg.user:
-        # 		if u1!=u2:
-        # 			if self.user_sim.contains(u1,u2):
-        # 				continue
-        # 			sim = pearson_sp(self.rg.get_row(u1),self.rg.get_row(u2))
-        # 			sim=round(sim,5)
-        # 			self.user_sim.set(u1,u2,sim)
-        # util.save_data(self.user_sim,'../data/sim/ft_08_uu_tricf_cv1.pkl')
+        self.user_sim = SimMatrix()
+        self.item_sim = SimMatrix()
+        self.user_k_neibor = defaultdict(dict)
+        self.item_k_neibor = defaultdict(dict)
 
-        # 寻找用户的k近邻
-        self.user_k_neibor = util.load_data(
-            '../data/neibor/ft_08_uu_' + str(self.config.user_near_num) + '_neibor_tricf.pkl')
-        # for user in self.rg.user:
-        #     matchUsers = sorted(self.user_sim[user].items(),key = lambda x:x[1],reverse=True)[:self.config.user_near_num]
-        #     matchUsers=matchUsers[:self.config.user_near_num]
-        #     self.user_k_neibor[user]=dict(matchUsers)
-        # util.save_data(self.user_k_neibor,'../data/neibor/ft_08_uu_'+str(self.config.user_near_num)+'_neibor_tricf.pkl')
+        # compute item-item similarity matrix
+        print('constructing user-user similarity matrix...')
+        # self.user_sim = util.load_data('../data/sim/ft_08_uu_tricf.pkl')
+        for u1 in self.rg.user:
+            for u2 in self.rg.user:
+                if u1 != u2:
+                    if self.user_sim.contains(u1, u2):
+                        continue
+                    sim = pearson_sp(self.rg.get_row(u1), self.rg.get_row(u2))
+                    sim = round(sim, 5)
+                    self.user_sim.set(u1, u2, sim)
+        util.save_data(self.user_sim, '../data/sim/ft_08_uu_tricf_cv0.pkl')
 
-        # 项目
-        # print('constructing item-item similarity matrix...')
-        self.item_sim = util.load_data('../data/sim/ft_08_ii_tricf.pkl')
-        # for i1 in self.rg.item:
-        # 	for i2 in self.rg.item:
-        # 		if i1!=i2:
-        # 			if self.item_sim.contains(i1,i2):
-        # 				continue
-        # 			sim = pearson_sp(self.rg.get_col(i1),self.rg.get_col(i2))
-        # 			sim=round(sim,5)
-        # 			self.item_sim.set(i1,i2,sim)
-        # util.save_data(self.item_sim,'../data/sim/ft_08_ii_tricf_cv1.pkl')
+        # compute the k neighbors of user
+        # self.user_k_neibor = util.load_data(
+        #     '../data/neibor/ft_08_uu_' + str(self.config.user_near_num) + '_neibor_tricf.pkl')
+        for user in self.rg.user:
+            matchUsers = sorted(self.user_sim[user].items(), key=lambda x: x[1], reverse=True)[
+                         :self.config.user_near_num]
+            matchUsers = matchUsers[:self.config.user_near_num]
+            self.user_k_neibor[user] = dict(matchUsers)
+        util.save_data(self.user_k_neibor,
+                       '../data/neibor/ft_08_uu_' + str(self.config.user_near_num) + '_neibor_tricf_cv0.pkl')
 
-        # 寻找项目的k近邻
-        self.item_k_neibor = util.load_data(
-            '../data/neibor/ft_08_ii_' + str(self.config.item_near_num) + '_neibor_tricf.pkl')
-        # for item in self.rg.item:
-        #     matchItems = sorted(self.item_sim[item].items(),key = lambda x:x[1],reverse=True)[:self.config.item_near_num]
-        #     matchItems=matchItems[:self.config.item_near_num]
-        #     self.item_k_neibor[item]=dict(matchItems)
-        # util.save_data(self.item_k_neibor,'../data/neibor/ft_08_ii_'+str(self.config.item_near_num)+'_neibor_tricf_cv1.pkl')
+        # compute item-item similarity matrix
+        print('constructing item-item similarity matrix...')
+        # self.item_sim = util.load_data('../data/sim/ft_08_ii_tricf.pkl')
+        for i1 in self.rg.item:
+            for i2 in self.rg.item:
+                if i1 != i2:
+                    if self.item_sim.contains(i1, i2):
+                        continue
+                    sim = pearson_sp(self.rg.get_col(i1), self.rg.get_col(i2))
+                    sim = round(sim, 5)
+                    self.item_sim.set(i1, i2, sim)
+        util.save_data(self.item_sim, '../data/sim/ft_08_ii_tricf_cv0.pkl')
+
+        # compute the k neighbors of item
+        # self.item_k_neibor = util.load_data(
+        #     '../data/neibor/ft_08_ii_' + str(self.config.item_near_num) + '_neibor_tricf.pkl')
+        for item in self.rg.item:
+            matchItems = sorted(self.item_sim[item].items(), key=lambda x: x[1], reverse=True)[
+                         :self.config.item_near_num]
+            matchItems = matchItems[:self.config.item_near_num]
+            self.item_k_neibor[item] = dict(matchItems)
+        util.save_data(self.item_k_neibor,
+                       '../data/neibor/ft_08_ii_' + str(self.config.item_near_num) + '_neibor_tricf_cv0.pkl')
         pass
 
     def train_model(self):
         print('training model...')
         iteration = 0
+        # faflag=True
         while iteration < self.config.maxIter:
             self.loss = 0
+            self.u_near_total_dict = defaultdict()
+            self.i_near_total_dict = defaultdict()
             for index, line in enumerate(self.rg.trainSet()):
                 user, item, rating = line
                 u = self.rg.user[user]
                 i = self.rg.item[item]
+
                 error = rating - self.predict(user, item)
                 self.loss += error ** 2
                 p, q = self.P[u], self.Q[i]
 
-                # 获取user和item的k近邻
+                # get the k neighbors of user and item
                 matchUsers = self.user_k_neibor[user]
                 matchItems = self.item_k_neibor[item]
 
-                u_near_sum, u_near_total = np.zeros((self.config.factor)), 0.0
+                u_near_sum, u_near_total, s = np.zeros((self.config.factor)), 0.0, 0.0
                 for suser in matchUsers.keys():
                     near_user, sim_value = suser, matchUsers[suser]
-                    pn = self.P[self.rg.user[near_user]]
-                    u_near_sum += sim_value * (pn - p)
-                    u_near_total += sim_value * ((pn - p).dot(pn - p))
+                    if sim_value != 0.0:
+                        s += sim_value
+                        pn = self.P[self.rg.user[near_user]]
+                        u_near_sum += sim_value * (pn - p)
+                        u_near_total += sim_value * ((pn - p).dot(pn - p))
+                if s != 0.0:
+                    u_near_sum /= s
 
-                i_near_sum, i_near_total = np.zeros((self.config.factor)), 0.0
+                i_near_sum, i_near_total, ss = np.zeros((self.config.factor)), 0.0, 0.0
                 for sitem in matchItems:
                     near_item, sim_value = sitem, matchItems[sitem]
+                    if sim_value != 0.0:
+                        ss += sim_value
                     qn = self.Q[self.rg.item[near_item]]
                     i_near_sum += sim_value * (qn - q)
                     i_near_total += sim_value * ((qn - q).dot(qn - q))
+                if ss != 0.0:
+                    i_near_sum /= ss
+
+                if u not in self.u_near_total_dict:
+                    self.u_near_total_dict[u] = u_near_total
+                if i not in self.i_near_total_dict:
+                    self.i_near_total_dict[i] = i_near_total
+
+                self.Bu[u] += self.config.lr * (error - self.config.lambdaB * self.Bu[u])
+                self.Bi[i] += self.config.lr * (error - self.config.lambdaB * self.Bi[i])
 
                 self.P[u] += self.config.lr * (error * q - self.config.lambdaU * u_near_sum - self.config.lambdaP * p)
                 self.Q[i] += self.config.lr * (error * p - self.config.lambdaI * i_near_sum - self.config.lambdaQ * q)
 
                 self.loss += 0.5 * (self.config.lambdaU * u_near_total + self.config.lambdaI * i_near_total)
 
-            self.loss += self.config.lambdaP * (self.P * self.P).sum() + self.config.lambdaQ * (self.Q * self.Q).sum()
+            self.loss += self.config.lambdaP * (self.P * self.P).sum() + self.config.lambdaQ * (self.Q * self.Q).sum() \
+                         + self.config.lambdaB * ((self.Bu * self.Bu).sum() + (self.Bi * self.Bi).sum())
 
             iteration += 1
             if self.isConverged(iteration):
@@ -139,29 +172,11 @@ class TriCF(MF):
         rmse = Metric.RMSE(res)
         return rmse
 
-    def predict_improved(self, user, item):
-        if str(user) in self.w2v_model:
-            user_mf = self.get_user_url_to_mf(user)
-            if self.rg.containsItem(item):
-                return user_mf.dot(self.Q[self.rg.item[item]])[0]
-            elif self.rg.containsUser(user):
-                return self.rg.userMeans[user]
-            else:
-                return self.rg.globalMean
-        else:
-            if self.rg.containsUser(user) and self.rg.containsItem(item):
-                return self.P[self.rg.user[user]].dot(self.Q[self.rg.item[item]])
-            elif self.rg.containsUser(user) and not self.rg.containsItem(item):
-                return self.rg.userMeans[user]
-            elif not self.rg.containsUser(user) and self.rg.containsItem(item):
-                return self.rg.itemMeans[item]
-            else:
-                return self.rg.globalMean
-
 
 if __name__ == '__main__':
-    tc = TriCF()
+    tc = TriCFBias()
     tc.train_model()
     coldrmse = tc.predict_model_cold_users()
     print('cold start user rmse is :' + str(coldrmse))
+    cpprint(tc.config.__dict__)
     # srg.show_rmse()

@@ -1,7 +1,7 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
+sys.path.append("..")
 
 import numpy as np
 from numpy.linalg import norm
@@ -35,6 +35,7 @@ def denormalize(rating, minVal=config.min_val, maxVal=config.max_val):
 
 def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
+
 
 def sigmoid_deriv(z):
     return sigmoid(z) * (1.0 - sigmoid(z))

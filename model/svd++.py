@@ -1,8 +1,8 @@
 # encoding:utf-8
 import sys
 
-sys.path.append("..")  # 将该目录加入到环境变量
-
+sys.path.append("..")
+from prettyprinter import cpprint
 import numpy as np
 from mf import MF
 
@@ -17,11 +17,11 @@ class SVDPP(MF):
 
     def __init__(self):
         super(SVDPP, self).__init__()
-        self.config.lambdaP = 0.01
-        self.config.lambdaQ = 0.01
+        self.config.lambdaP = 0.001
+        self.config.lambdaQ = 0.001
 
-        self.config.lambdaY = 0.01
-        self.config.lambdaB = 0.01
+        self.config.lambdaY = 0.001
+        self.config.lambdaB = 0.001
         self.init_model()
 
     def init_model(self):
@@ -29,7 +29,8 @@ class SVDPP(MF):
         self.Bu = np.random.rand(self.rg.get_train_size()[0]) / (self.config.factor ** 0.5)  # bias value of user
         self.Bi = np.random.rand(self.rg.get_train_size()[1]) / (self.config.factor ** 0.5)  # bias value of item
         self.Y = np.random.rand(self.rg.get_train_size()[1], self.config.factor) / (
-        self.config.factor ** 0.5)  # implicit preference
+                self.config.factor ** 0.5)  # implicit preference
+        self.SY = dict()
 
     def train_model(self):
         iteration = 0
@@ -59,7 +60,8 @@ class SVDPP(MF):
 
             self.loss += self.config.lambdaP * (self.P * self.P).sum() + self.config.lambdaQ * (self.Q * self.Q).sum() \
                          + self.config.lambdaB * (
-            (self.Bu * self.Bu).sum() + (self.Bi * self.Bi).sum()) + self.config.lambdaY * (self.Y * self.Y).sum()
+                                 (self.Bu * self.Bu).sum() + (self.Bi * self.Bi).sum()) + self.config.lambdaY * (
+                                     self.Y * self.Y).sum()
             iteration += 1
             if self.isConverged(iteration):
                 break
@@ -74,12 +76,15 @@ class SVDPP(MF):
             return self.rg.globalMean
 
     def get_sum_y(self, u):
+        if u in self.SY:
+            return self.SY[u]
         u_items = self.rg.user_rated_items(u)
         nu = len(u_items)
         sum_y = np.zeros(self.config.factor)
         for j in u_items:
             sum_y += self.Y[self.rg.item[j]]
         sum_y /= (np.sqrt(nu))
+        self.SY[u] = [nu, sum_y]
         return nu, sum_y
 
 
@@ -87,3 +92,4 @@ if __name__ == '__main__':
     bmf = SVDPP()
     bmf.train_model()
     bmf.predict_model()
+    cpprint(bmf.config.__dict__)

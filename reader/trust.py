@@ -3,6 +3,8 @@ import sys
 
 sys.path.append("..")
 import numpy as np
+import os
+from collections import defaultdict
 
 from configx.configx import ConfigX
 
@@ -20,7 +22,7 @@ class TrustGetter(object):
 
         self.user = {}  # used to store the order of users
         self.relations = self.get_relations()
-        self.followees = {}
+        self.followees = defaultdict(dict)
         self.followers = {}
         self.matrix_User = {}
         self.matrix_Item = {}
@@ -33,10 +35,10 @@ class TrustGetter(object):
             # add relations to dict
             if not userId1 in self.followees:
                 self.followees[userId1] = {}
-            self.followees[userId1][userId2] = weight  # user1所关注的人
+            self.followees[userId1][userId2] = weight
             if not userId2 in self.followers:
                 self.followers[userId2] = {}
-            self.followers[userId2][userId1] = weight  # user2的关注者，谁关注user2
+            self.followers[userId2][userId1] = weight
             # order the user
             if not userId1 in self.user:
                 userid1 = self.user[userId1] = len(self.user)
@@ -50,6 +52,9 @@ class TrustGetter(object):
             self.matrix_Item[userid2][userid1] = weight
 
     def get_relations(self):
+        if not os.path.isfile(self.config.trust_path):
+            print("the format of trust data is wrong")
+            sys.exit()
         with open(self.config.trust_path, 'r') as f:
             for index, line in enumerate(f):
                 u_from, u_to, t = line.strip('\r\n').split(self.config.sep)
