@@ -72,51 +72,53 @@ If you want to change the default hyparameters, you can set it in `configx.py`. 
 
 #### Dataset parameters
 
-`dataset_name`: the short name of dataset,["ft":"filmtrust","db":"douban","ca":"ciao"]
+`dataset_name`: the short name of dataset, the default value is `ft`.
 
-`k_fold_num`: the num of cross validation
+`k_fold_num`: the num of cross validation, the default value is `5`.
 
-`rating_path `: the path of raw ratings data file
+`rating_path `: the path of raw ratings data file, the default value is `../data/ft_ratings.txt`.
 
-`trust_path`: the path of raw trust data file
+`rating_cv_path`: the cross validation path of ratings data, the default value is `../data/cv/`.
 
-`sep`: the separator of rating and trust data in triple tuple
+`trust_path`: the path of raw trust data file, the default value is `../data/ft_trust.txt`.
 
-`random_state`: the seed of random number
+`sep`: the separator of rating and trust data in triple tuple, the default value is ` `.
 
-`size`: the ratio of train set
+`random_state`: the seed of random number, the default value is `0`.
 
-`min_val`: the minimum rating value
+`size`: the ratio of train set, the default value is `0.8`.
 
-`max_val`: the maximum rating value
+`min_val`: the minimum rating value, the default value is `0.5`.
+
+`max_val`: the maximum rating value, the default value is `4.0`.
 
 #### Model HyperParameter
 
-`coldUserRating`: the number of ratings a cold start user rated on items
+`coldUserRating`: the number of ratings a cold start user rated on items, the default value is `5`.
 
-`factor`: the size of latent dimension for user and item
+`factor`: the size of latent dimension for user and item, the default value is `10`.
 
-`threshold`: the threshold value of model training 
+`threshold`: the threshold value of model training, the default value is `1e-4`.
 
-`lr`: the learning rate
+`lr`: the learning rate, the default value is `0.01`.
 
-`maxIter`: the maximum number of iterations
+`maxIter`: the maximum number of iterations, the default value is `100`.
 
-`lambdaP`: the parameter of user regularizer
+`lambdaP`: the parameter of user regularizer, the default value is `0.001`.
 
-`lambdaQ`: the parameter of item regularizer
+`lambdaQ`: the parameter of item regularizer, the default value is `0.001`.
 
-`gamma`: momentum coefficient
+`gamma`: momentum coefficient, the default value is `0.9`.
 
-`isEarlyStopping`: early stopping flag
+`isEarlyStopping`: early stopping flag, the default value is `false`.
 
 #### Output Parameters
 
-`result_path`: the directory of results
+`result_path`: the main directory of results, the default value is `../results/`.
 
-`model_path`: the directory of well-trained variables
+`model_path`: the directory of well-trained variables, the default value is `../results/model/`.
 
-`result_log_path`: the directory of logs when training models
+`result_log_path`: the directory of logs when training models, the default value is `../results/log/`.
 
 ## Usage
 
@@ -126,7 +128,7 @@ Specially summerize the Traditional and Social recommendations for you, and if y
 
 My Homepage [Honglei Zhang](http://midas.bjtu.edu.cn/Home/MemberStudent/27)
 
-My ZhiHu [张小磊](https://www.zhihu.com/people/hongleizhang)
+My ZhiHu [Honglei Zhang](https://www.zhihu.com/people/hongleizhang)
 
 
 
