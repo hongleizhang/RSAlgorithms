@@ -59,10 +59,66 @@ Ma, Hao, et al. "Recommender systems with social regularization." Proceedings of
 
 Guo, Guibing, Jie Zhang, and Neil Yorke-Smith. "TrustSVD: Collaborative Filtering with Both the Explicit and Implicit Influence of User Trust and of Item Ratings." AAAI. Vol. 15. 2015.
 
+## Requirements
+* numpy==1.14.2
+* scipy==1.0.1
+* pandas==0.22.0
+* matplotlib==2.2.2
 
 
 ## Parameters Settings
 
+If you want to change the default hyparameters, you can set it in `configx.py`. The meanings of the hyparameters is as follows:
+
+#### Dataset parameters
+
+`dataset_name`: the short name of dataset,["ft":"filmtrust","db":"douban","ca":"ciao"]
+
+`k_fold_num`: the num of cross validation
+
+`rating_path `: the path of raw ratings data file
+
+`trust_path`: the path of raw trust data file
+
+`sep`: the separator of rating and trust data in triple tuple
+
+`random_state`: the seed of random number
+
+`size`: the ratio of train set
+
+`min_val`: the minimum rating value
+
+`max_val`: the maximum rating value
+
+#### Model HyperParameter
+
+`coldUserRating`: the number of ratings a cold start user rated on items
+
+`factor`: the size of latent dimension for user and item
+
+`threshold`: the threshold value of model training 
+
+`lr`: the learning rate
+
+`maxIter`: the maximum number of iterations
+
+`lambdaP`: the parameter of user regularizer
+
+`lambdaQ`: the parameter of item regularizer
+
+`gamma`: momentum coefficient
+
+`isEarlyStopping`: early stopping flag
+
+#### Output Parameters
+
+`result_path`: the directory of results
+
+`model_path`: the directory of well-trained variables
+
+`result_log_path`: the directory of logs when training models
+
+## Usage
 
 ## Acknowledgements
 
