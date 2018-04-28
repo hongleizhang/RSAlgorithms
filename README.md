@@ -67,8 +67,10 @@ Guo, Guibing, Jie Zhang, and Neil Yorke-Smith. "TrustSVD: Collaborative Filterin
 
 ## Code Structure
 
+The structure of our project is presented in a tree form as follows:
+
 ```
-Recommender System
+Recommender System  # the root of project
 │   README.md
 │   __init__.py
 │   .gitignore
@@ -80,7 +82,7 @@ Recommender System
 │   │   ft_ratings.txt
 |   │   ft_trust.txt
 |   |
-│   └───cv
+│   └───cv  # cross validation data
 │       │   ft-0.txt
 │       │   ft-1.txt
 │       │   ft-2.txt
@@ -103,12 +105,11 @@ Recommender System
 |   |   social_reg.py
 |   |   social_rste.py
 |   |   svd++.py
-|   |   tri_cf.py
 |   |   trust_svd.py
 |   |   trust_walker.py
 |   |   user_cf.py
 |   |
-└───reader  # data getter for rating and social data
+└───reader  # data generator for rating and social data
 │   │   rating.py
 │   │   trust.py
 |   |
@@ -179,9 +180,48 @@ If you want to change the default hyparameters, you can set it in `configx.py`. 
 
 ## Usage
 
+Next, I will take `pmf` as an example to introduce how to execute our code.
+
+First, we should split our rating data into several parts for training, testing and cross validation.
+```
+from utility.cross_validation import split_5_folds
+from configx.configx import ConfigX
+
+if __name__ == "__main__":
+    configx = ConfigX()
+    configx.k_fold_num = 5 
+    configx.rating_path = "../data/ft_ratings.txt"
+    configx.rating_cv_path = "../data/cv/"
+    
+    split_5_folds(configx)
+```
+
+Next, we open the `pmf.py` file in `model` folder, and configure the hyperparameters for training and execute the following code：
+
+```
+if __name__ == '__main__':
+
+    rmses = []
+    maes = []
+    bmf = FunkSVDwithR()
+    for i in range(bmf.config.k_fold_num):
+        bmf.train_model(i)
+        rmse, mae = bmf.predict_model()
+        print("current best rmse is %0.5f, mae is %0.5f" % (rmse, mae))
+        rmses.append(rmse)
+        maes.append(mae)
+    rmse_avg = sum(rmses) / 5
+    mae_avg = sum(maes) / 5
+    print("the rmses are %s" % rmses)
+    print("the maes are %s" % maes)
+    print("the average of rmses is %s " % rmse_avg)
+    print("the average of maes is %s " % mae_avg)
+
+```
+
 ## Acknowledgements
 
-Specially summerize the Traditional and Social recommendations for you, and if you have any questions, please contact me quickly. Last but not least, I sincerely look forward to working with you to contribute it.
+Specially summerize the Traditional and Social recommendations for you, and if you have any questions, please contact me generously. Last but not least, I sincerely look forward to working with you to contribute it.
 
 My Homepage [Honglei Zhang](http://midas.bjtu.edu.cn/Home/MemberStudent/27)
 
