@@ -67,6 +67,63 @@ Guo, Guibing, Jie Zhang, and Neil Yorke-Smith. "TrustSVD: Collaborative Filterin
 
 ## Code Structure
 
+```
+Recommender System
+│   README.md
+│   __init__.py
+│   .gitignore
+|
+└───configx  # configurate the global parameters and hyper parameters
+│   │   configx.py   
+|   │   
+└───data  # store the rating and social data
+│   │   ft_ratings.txt
+|   │   ft_trust.txt
+|   |
+│   └───cv
+│       │   ft-0.txt
+│       │   ft-1.txt
+│       │   ft-2.txt
+│       │   ft-3.txt
+│       │   ft-4.txt
+|       |
+└───metrics  # the metrics to measure the prediction accuracy for rating prediction task
+│   │   metric.py
+|   |
+└───model  # the set of methods of tranditional and social recommendation
+│   │   bias_svd.py
+│   │   funk_svd.py
+│   │   funk_svd_r.py
+│   │   integ_svd.py
+|   |   item_cf.py
+|   |   item_cf_big.py
+|   |   mf.py
+|   |   social_mf.py
+|   |   social_rec.py
+|   |   social_reg.py
+|   |   social_rste.py
+|   |   svd++.py
+|   |   tri_cf.py
+|   |   trust_svd.py
+|   |   trust_walker.py
+|   |   user_cf.py
+|   |
+└───reader  # data getter for rating and social data
+│   │   rating.py
+│   │   trust.py
+|   |
+└───utility  # other commonly used tools
+    │   cross_validation.py
+    │   data_prepro.py
+    │   data_statistics.py
+    │   draw_figure.py
+    │   matrix.py
+    │   similarity.py
+    │   tools.py
+    │   util.py
+```
+
+
 ## Parameters Settings
 If you want to change the default hyparameters, you can set it in `configx.py`. The meanings of the hyparameters is as follows:
 
@@ -92,7 +149,7 @@ If you want to change the default hyparameters, you can set it in `configx.py`. 
 
 `max_val`: the maximum rating value, the default value is `4.0`.
 
-#### Model HyperParameter
+#### Model HyperParameters
 
 `coldUserRating`: the number of ratings a cold start user rated on items, the default value is `5`.
 
