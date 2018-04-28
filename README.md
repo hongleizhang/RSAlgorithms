@@ -95,7 +95,7 @@ Recommender System  # the root of project
 └───model  # the set of methods of tranditional and social recommendation
 │   │   bias_svd.py
 │   │   funk_svd.py
-│   │   funk_svd_r.py
+│   │   pmf.py
 │   │   integ_svd.py
 |   |   item_cf.py
 |   |   item_cf_big.py
