@@ -223,6 +223,8 @@ if __name__ == '__main__':
 
 Specially summerize the Traditional and Social recommendations for you, and if you have any questions, please contact me generously. Last but not least, I sincerely look forward to working with you to contribute it.
 
+Greatly thank @yunzhan2014 for making contributions to it.
+
 My Homepage [Honglei Zhang](http://midas.bjtu.edu.cn/Home/MemberStudent/27)
 
 My ZhiHu [Honglei Zhang](https://www.zhihu.com/people/hongleizhang)
