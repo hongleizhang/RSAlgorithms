@@ -1,6 +1,6 @@
 # Recommender System Suits： An open source toolkit for recommender system
 
-This repository provides a set of classical **traditional recommendation methods** which make predictions only using rating data and **social recommendation methods** which incorporate trust/social information in order to alleviate the sparsity of ratings data. 
+This repository provides a set of classical **traditional recommendation methods** which make predictions only using rating data and **social recommendation methods** which utilize trust/social information in order to alleviate the sparsity of ratings data. 
 
 ## Traditional recommendation
 
