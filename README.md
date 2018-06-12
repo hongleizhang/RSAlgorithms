@@ -221,7 +221,9 @@ if __name__ == '__main__':
 
 ## RSPapers
 
-Recently, we have launched an open source project [**RSPapers**](https://github.com/hongleizhang/RSPapers), which includes some classical **Surveys**, **Classical Recommender System**, **Social Recommender System**, **Deep Learning based Recommender System**, **Cold Start Problem in Recommender System** and **POI Recommender System**. And if you have any questions, please contact me generously. Last but not least, the ability of myself is limited so I sincerely look forward to working with you to contribute it.
+Recently, we have launched an open source project [**RSPapers**](https://github.com/hongleizhang/RSPapers), which includes some classical **Surveys**, **Classical Recommender System**, **Social Recommender System**, **Deep Learning based Recommender System**, **Cold Start Problem in Recommender System** and **POI Recommender System**. 
+
+And if you have any questions, please contact me generously. Last but not least, the ability of myself is limited so I sincerely look forward to working with you to contribute it.
 
 ## Acknowledgements
 
