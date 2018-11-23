@@ -22,17 +22,18 @@ class SVDPP(MF):
 
         self.config.lambdaY = 0.001
         self.config.lambdaB = 0.001
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
-        super(SVDPP, self).init_model()
+    def init_model(self, k):
+        super(SVDPP, self).init_model(k)
         self.Bu = np.random.rand(self.rg.get_train_size()[0]) / (self.config.factor ** 0.5)  # bias value of user
         self.Bi = np.random.rand(self.rg.get_train_size()[1]) / (self.config.factor ** 0.5)  # bias value of item
         self.Y = np.random.rand(self.rg.get_train_size()[1], self.config.factor) / (
                 self.config.factor ** 0.5)  # implicit preference
         self.SY = dict()
 
-    def train_model(self):
+    def train_model(self, k):
+        super(SVDPP, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -89,7 +90,19 @@ class SVDPP(MF):
 
 
 if __name__ == '__main__':
-    bmf = SVDPP()
-    bmf.train_model()
-    bmf.predict_model()
-    cpprint(bmf.config.__dict__)
+    rmses = []
+    maes = []
+    tcsr = SVDPP()
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(tcsr.config.k_fold_num):
+        print('the %dth cross validation training' % i)
+        tcsr.train_model(i)
+        rmse, mae = tcsr.predict_model()
+        rmses.append(rmse)
+        maes.append(mae)
+    rmse_avg = sum(rmses) / 5
+    mae_avg = sum(maes) / 5
+    print("the rmses are %s" % rmses)
+    print("the maes are %s" % maes)
+    print("the average of rmses is %s " % rmse_avg)
+    print("the average of maes is %s " % mae_avg)

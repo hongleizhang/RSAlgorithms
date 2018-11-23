@@ -33,10 +33,10 @@ class IntegSVD(MF):
 
         self.config.lambdaW = 0.01
         # self.config.lambdaC = 0.015
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
-        super(IntegSVD, self).init_model()
+    def init_model(self, k):
+        super(IntegSVD, self).init_model(k)
 
         self.Bu = np.random.rand(self.rg.get_train_size()[0]) / (self.config.factor ** 0.5)  # bias value of user
         self.Bi = np.random.rand(self.rg.get_train_size()[1]) / (self.config.factor ** 0.5)  # bias value of item
@@ -51,7 +51,8 @@ class IntegSVD(MF):
         #     for item in self.rg.trainSet_u[user]:
         #         self.get_neighbor(user,item)
 
-    def train_model(self):
+    def train_model(self, k):
+        super(IntegSVD, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -147,8 +148,15 @@ class IntegSVD(MF):
 
 
 if __name__ == '__main__':
+    rmses = []
     bmf = IntegSVD()
-    bmf.train_model()
-    bmf.predict_model()
-    print(bmf.predict_model_cold_users())
-    cpprint(bmf.config.__dict__)
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(bmf.config.k_fold_num):
+        bmf.train_model(i)
+        rmse, mae = bmf.predict_model()
+        rmses.append(rmse)
+    print(rmses)
+    # bmf.config.k_current = 1
+    # print(bmf.rg.trainSet_u[1])
+    # bmf.train_model()
+    # bmf.predict_model()

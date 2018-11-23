@@ -20,9 +20,10 @@ class TrustWalker(MF):
         super(TrustWalker, self).__init__()
         np.random.seed(0)
         self.tg = TrustGetter()
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
+    def init_model(self, k):
+        super(TrustWalker, self).init_model(k)
         self.p = 1.0
         pass
 
@@ -120,5 +121,6 @@ class TrustWalker(MF):
 
 if __name__ == '__main__':
     tw = TrustWalker()
+    tw.init_model(0)
     s = tw.single_random_walk(16, 235)  # test on user 16 and item 235
     print(s)

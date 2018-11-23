@@ -19,9 +19,10 @@ class ItemCF(MF):
     def __init__(self):
         super(ItemCF, self).__init__()
         self.config.n = 50
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
+    def init_model(self, k):
+        super(ItemCF, self).init_model(k)
         self.item_sim = SimMatrix()
 
         for i_test in self.rg.testSet_i:
@@ -67,6 +68,9 @@ class ItemCF(MF):
 
 if __name__ == '__main__':
     ic = ItemCF()
+    ic.init_model(0)
     print(ic.predict_model())
     print(ic.predict_model_cold_users())
-    cpprint(ic.config.__dict__)
+    ic.init_model(1)
+    print(ic.predict_model())
+    print(ic.predict_model_cold_users())

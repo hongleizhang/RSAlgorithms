@@ -18,14 +18,15 @@ class BiasSVD(MF):
     def __init__(self):
         super(BiasSVD, self).__init__()
         self.config.lambdaB = 0.001  # 偏置项系数
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
-        super(BiasSVD, self).init_model()
+    def init_model(self, k):
+        super(BiasSVD, self).init_model(k)
         self.Bu = np.random.rand(self.rg.get_train_size()[0]) / (self.config.factor ** 0.5)  # bias value of user
         self.Bi = np.random.rand(self.rg.get_train_size()[1]) / (self.config.factor ** 0.5)  # bias value of item
 
-    def train_model(self):
+    def train_model(self, k):
+        super(BiasSVD, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -61,6 +62,21 @@ class BiasSVD(MF):
 
 
 if __name__ == '__main__':
+
+    rmses = []
+    maes = []
     bmf = BiasSVD()
-    bmf.train_model()
-    bmf.predict_model()
+    bmf.config.k_fold_num = 1
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(bmf.config.k_fold_num):
+        bmf.train_model(i)
+        rmse, mae = bmf.predict_model()
+        print("current best rmse is %0.5f, mae is %0.5f" % (rmse, mae))
+        rmses.append(rmse)
+        maes.append(mae)
+    rmse_avg = sum(rmses) / 5
+    mae_avg = sum(maes) / 5
+    print("the rmses are %s" % rmses)
+    print("the maes are %s" % maes)
+    print("the average of rmses is %s " % rmse_avg)
+    print("the average of maes is %s " % mae_avg)

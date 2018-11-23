@@ -24,10 +24,10 @@ class RSTE(MF):
         self.config.alpha = 0.5
         # self.config.lambdaH=0.01
         self.tg = TrustGetter()
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
-        super(RSTE, self).init_model()
+    def init_model(self, k):
+        super(RSTE, self).init_model(k)
 
     # from collections import defaultdict
     # self.Sim = defaultdict(dict)
@@ -39,7 +39,8 @@ class RSTE(MF):
     # 		else:
     # 			self.Sim[user][k]=self.get_sim(user,k)
 
-    def train_model(self):
+    def train_model(self, k):
+        super(RSTE, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -135,7 +136,19 @@ class RSTE(MF):
 
 
 if __name__ == '__main__':
-    rste = RSTE()
-    rste.train_model()
-    # rste.show_rmse()
-    print(rste.predict_model_cold_users())
+    rmses = []
+    maes = []
+    tcsr = RSTE()
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(tcsr.config.k_fold_num):
+        print('the %dth cross validation training' % i)
+        tcsr.train_model(i)
+        rmse, mae = tcsr.predict_model()
+        rmses.append(rmse)
+        maes.append(mae)
+    rmse_avg = sum(rmses) / 5
+    mae_avg = sum(maes) / 5
+    print("the rmses are %s" % rmses)
+    print("the maes are %s" % maes)
+    print("the average of rmses is %s " % rmse_avg)
+    print("the average of maes is %s " % mae_avg)

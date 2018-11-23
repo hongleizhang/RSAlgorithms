@@ -44,7 +44,6 @@ class RatingGetter(object):
         self.getDataSet()
         self.get_data_statistics()
         self.get_cold_start_users()
-        self.get_full_users()
 
     def generate_data_set(self):
         for index, line in enumerate(self.trainSet()):

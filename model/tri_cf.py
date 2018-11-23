@@ -1,6 +1,6 @@
 # encoding:utf-8
 import sys
-
+import os
 sys.path.append("..")
 import numpy as np
 from mf import MF
@@ -30,10 +30,10 @@ class TriCFBias(MF):
 
         self.config.user_near_num = 50
         self.config.item_near_num = 50
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
-        super(TriCFBias, self).init_model()
+    def init_model(self, k):
+        super(TriCFBias, self).init_model(k)
         self.Bu = np.random.rand(self.rg.get_train_size()[0])  # bias value of user
         self.Bi = np.random.rand(self.rg.get_train_size()[1])  # bais value of item
         self.build_user_item_sim_CF()
@@ -57,6 +57,10 @@ class TriCFBias(MF):
                     sim = pearson_sp(self.rg.get_row(u1), self.rg.get_row(u2))
                     sim = round(sim, 5)
                     self.user_sim.set(u1, u2, sim)
+        if not os.path.exists('../data/sim'):
+            os.makedirs('../data/sim')
+            print('../data/sim folder has been established.')
+
         util.save_data(self.user_sim, '../data/sim/ft_08_uu_tricf_cv0.pkl')
 
         # compute the k neighbors of user
@@ -67,6 +71,11 @@ class TriCFBias(MF):
                          :self.config.user_near_num]
             matchUsers = matchUsers[:self.config.user_near_num]
             self.user_k_neibor[user] = dict(matchUsers)
+
+        if not os.path.exists('../data/neibor'):
+            os.makedirs('../data/neibor')
+            print('../data/neibor folder has been established.')
+            
         util.save_data(self.user_k_neibor,
                        '../data/neibor/ft_08_uu_' + str(self.config.user_near_num) + '_neibor_tricf_cv0.pkl')
 
@@ -95,7 +104,8 @@ class TriCFBias(MF):
                        '../data/neibor/ft_08_ii_' + str(self.config.item_near_num) + '_neibor_tricf_cv0.pkl')
         pass
 
-    def train_model(self):
+    def train_model(self, k):
+        super(TriCFBias, self).train_model(k)
         print('training model...')
         iteration = 0
         # faflag=True
@@ -174,9 +184,19 @@ class TriCFBias(MF):
 
 
 if __name__ == '__main__':
-    tc = TriCFBias()
-    tc.train_model()
-    coldrmse = tc.predict_model_cold_users()
-    print('cold start user rmse is :' + str(coldrmse))
-    cpprint(tc.config.__dict__)
-    # srg.show_rmse()
+    rmses = []
+    maes = []
+    tcsr = TriCFBias()
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(tcsr.config.k_fold_num):
+        print('the %dth cross validation training' % i)
+        tcsr.train_model(i)
+        rmse, mae = tcsr.predict_model()
+        rmses.append(rmse)
+        maes.append(mae)
+    rmse_avg = sum(rmses) / 5
+    mae_avg = sum(maes) / 5
+    print("the rmses are %s" % rmses)
+    print("the maes are %s" % maes)
+    print("the average of rmses is %s " % rmse_avg)
+    print("the average of maes is %s " % mae_avg)

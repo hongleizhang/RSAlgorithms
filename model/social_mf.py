@@ -19,9 +19,10 @@ class SocialMF(MF):
         # self.config.lr=0.0001
         self.config.alpha = 1  # 0.8 rmse=0.87605
         self.tg = TrustGetter()  # loading trust data
-        self.init_model()
+        # self.init_model()
 
-    def train_model(self):
+    def train_model(self, k):
+        super(SocialMF, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -82,6 +83,19 @@ class SocialMF(MF):
 
 
 if __name__ == '__main__':
-    smf = SocialMF()
-    smf.train_model()
-    print(smf.predict_model_cold_users())
+    rmses = []
+    maes = []
+    tcsr = SocialMF()
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(tcsr.config.k_fold_num):
+        print('the %dth cross validation training' % i)
+        tcsr.train_model(i)
+        rmse, mae = tcsr.predict_model()
+        rmses.append(rmse)
+        maes.append(mae)
+    rmse_avg = sum(rmses) / 5
+    mae_avg = sum(maes) / 5
+    print("the rmses are %s" % rmses)
+    print("the maes are %s" % maes)
+    print("the average of rmses is %s " % rmse_avg)
+    print("the average of maes is %s " % mae_avg)

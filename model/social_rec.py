@@ -21,14 +21,15 @@ class SocialRec(MF):
         self.config.alpha = 0.1
         self.config.lambdaZ = 0.01
         self.tg = TrustGetter()
-        self.init_model()
+        # self.init_model()
 
-    def init_model(self):
-        super(SocialRec, self).init_model()
+    def init_model(self, k):
+        super(SocialRec, self).init_model(k)
         self.Z = np.random.rand(self.rg.get_train_size()[0], self.config.factor) / (
                 self.config.factor ** 0.5)  # latent user social matrix
 
-    def train_model(self):
+    def train_model(self, k):
+        super(SocialRec, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             # tempP=np.zeros((self.rg.get_train_size()[0], self.config.factor))
@@ -71,8 +72,19 @@ class SocialRec(MF):
 
 
 if __name__ == '__main__':
-    src = SocialRec()
-    src.train_model()
-    coldrmse = src.predict_model_cold_users()
-    print('cold start user rmse is :' + str(coldrmse))
-    # src.show_rmse()
+    rmses = []
+    maes = []
+    tcsr = SocialRec()
+    # print(bmf.rg.trainSet_u[1])
+    for i in range(tcsr.config.k_fold_num):
+        print('the %dth cross validation training' % i)
+        tcsr.train_model(i)
+        rmse, mae = tcsr.predict_model()
+        rmses.append(rmse)
+        maes.append(mae)
+    rmse_avg = sum(rmses) / 5
+    mae_avg = sum(maes) / 5
+    print("the rmses are %s" % rmses)
+    print("the maes are %s" % maes)
+    print("the average of rmses is %s " % rmse_avg)
+    print("the average of maes is %s " % mae_avg)

@@ -61,6 +61,10 @@ def split_5_folds(configx):
             vals[k][from_ind:to_ind] = rating_vals[k_index_list]
             nonzeros[k] += sum(k_index_list)
 
+    if not os.path.exists('../data/cv'):
+        os.makedirs('../data/cv')
+        print('../data/cv folder has been established.')
+
     for k, (row, col, val, nonzero) in enumerate(zip(rows, cols, vals, nonzeros)):
         bucket_df = pd.DataFrame({'user': row[:nonzero], 'item': col[:nonzero], 'rating': val[:nonzero]},
                                  columns=['user', 'item', 'rating'])
