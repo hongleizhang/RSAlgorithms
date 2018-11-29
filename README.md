@@ -1,6 +1,6 @@
 # Recommender System Suits： An open source toolkit for recommender system
 
-This repository provides a set of classical **traditional recommendation methods** which make predictions only using rating data and **social recommendation methods** which utilize trust/social information in order to alleviate the sparsity of ratings data. 
+This repository provides a set of classical **traditional recommendation methods** which make predictions only using rating data and **social recommendation methods** which utilize trust/social information in order to alleviate the sparsity of ratings data. Besides, we have collected some classical methods implemented by others for your convenience.
 
 ## Traditional recommendation
 
@@ -58,6 +58,22 @@ Ma, Hao, et al. "Recommender systems with social regularization." Proceedings of
 * **TrustSVD**[Guo et al. 2015]
 
 Guo, Guibing, Jie Zhang, and Neil Yorke-Smith. "TrustSVD: Collaborative Filtering with Both the Explicit and Implicit Influence of User Trust and of Item Ratings." AAAI. Vol. 15. 2015.
+
+## RSAlgorithms implemented by Others
+
+Sedhain, Suvash, et al. "Autorec: Autoencoders meet collaborative filtering." WWW, 2015. [code](https://github.com/gtshs2/Autorec)
+
+Kim, Donghyun, et al. "Convolutional matrix factorization for document context-aware recommendation." RecSys, 2016. [code](https://github.com/cartopy/ConvMF)
+
+Liang, Dawen, et al. "Factorization meets the item embedding: Regularizing matrix factorization with item co-occurrence." RecSys, 2016. [code](https://github.com/dawenl/cofactor)
+
+He, Xiangnan, et al. "Fast matrix factorization for online recommendation with implicit feedback." SIGIR, 2016. [code](https://github.com/hexiangnan/sigir16-eals)
+
+Quadrana, Massimo, et al. "Personalizing session-based recommendations with hierarchical recurrent neural networks." RecSys, 2017. [code](https://github.com/mquad/hgru4rec)
+
+He, Xiangnan, et al. "Neural collaborative filtering." WWW, 2017. [code](https://github.com/hexiangnan/neural_collaborative_filtering)
+
+Ebesu, Travis, Bin Shen, and Yi Fang. "Collaborative Memory Network for Recommendation Systems." SIGIR, 2018. [code](https://github.com/tebesu/CollaborativeMemoryNetwork)
 
 ## Requirements
 * numpy==1.14.2
@@ -227,11 +243,11 @@ Recently, we have launched an open source project [**RSPapers**](https://github.
 
 Specially summerize the Traditional and Social recommendations for you, and if you have any questions, please contact me generously. Last but not least, I sincerely look forward to working with you to contribute it.
 
-Greatly thank @yunzhan2014 for making contributions to it.
+Greatly thank @**yunzhan2014** for making contributions to it.
 
-My Homepage [Honglei Zhang](http://midas.bjtu.edu.cn/Home/MemberStudent/27)
+My ZhiHu: [Honglei Zhang](https://www.zhihu.com/people/hongleizhang)
 
-My ZhiHu [Honglei Zhang](https://www.zhihu.com/people/hongleizhang)
+My Gmail: hongleizhang1993@gmail.com
 
 
 
