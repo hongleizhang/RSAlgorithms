@@ -59,6 +59,10 @@ Ma, Hao, et al. "Recommender systems with social regularization." Proceedings of
 
 Guo, Guibing, Jie Zhang, and Neil Yorke-Smith. "TrustSVD: Collaborative Filtering with Both the Explicit and Implicit Influence of User Trust and of Item Ratings." AAAI. Vol. 15. 2015.
 
+* **CUNE**[Zhang et al. 2017]
+
+Chuxu Zhang, Lu Yu, Yan Wang, Chirag Shah, Xiangliang Zhang. "Collaborative User Network Embedding for Social Recommender Systems." SDM, 2017.
+
 ## RSAlgorithms implemented by Others
 
 Sedhain, Suvash, et al. "Autorec: Autoencoders meet collaborative filtering." WWW, 2015. [code](https://github.com/gtshs2/Autorec)
