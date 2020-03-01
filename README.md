@@ -65,19 +65,24 @@ Chuxu Zhang, Lu Yu, Yan Wang, Chirag Shah, Xiangliang Zhang. "Collaborative User
 
 ## RSAlgorithms implemented by Others
 
-Sedhain, Suvash, et al. "Autorec: Autoencoders meet collaborative filtering." WWW, 2015. [code](https://github.com/gtshs2/Autorec)
+Sedhain et al. "Autorec: Autoencoders meet collaborative filtering." WWW, 2015. [code](https://github.com/gtshs2/Autorec)
 
-Kim, Donghyun, et al. "Convolutional matrix factorization for document context-aware recommendation." RecSys, 2016. [code](https://github.com/cartopy/ConvMF)
+Kim et al. "Convolutional matrix factorization for document context-aware recommendation." RecSys, 2016. [code](https://github.com/cartopy/ConvMF)
 
-Liang, Dawen, et al. "Factorization meets the item embedding: Regularizing matrix factorization with item co-occurrence." RecSys, 2016. [code](https://github.com/dawenl/cofactor)
+Liang et al. "Factorization meets the item embedding: Regularizing matrix factorization with item co-occurrence." RecSys, 2016. [code](https://github.com/dawenl/cofactor)
 
-He, Xiangnan, et al. "Fast matrix factorization for online recommendation with implicit feedback." SIGIR, 2016. [code](https://github.com/hexiangnan/sigir16-eals)
+He et al. "Fast matrix factorization for online recommendation with implicit feedback." SIGIR, 2016. [code](https://github.com/hexiangnan/sigir16-eals)
 
-Quadrana, Massimo, et al. "Personalizing session-based recommendations with hierarchical recurrent neural networks." RecSys, 2017. [code](https://github.com/mquad/hgru4rec)
+Quadrana et al. "Personalizing session-based recommendations with hierarchical recurrent neural networks." RecSys, 2017. [code](https://github.com/mquad/hgru4rec)
 
-He, Xiangnan, et al. "Neural collaborative filtering." WWW, 2017. [code](https://github.com/hexiangnan/neural_collaborative_filtering)
+He et al. "Neural collaborative filtering." WWW, 2017. [code](https://github.com/hexiangnan/neural_collaborative_filtering)
 
-Ebesu, Travis, Bin Shen, and Yi Fang. "Collaborative Memory Network for Recommendation Systems." SIGIR, 2018. [code](https://github.com/tebesu/CollaborativeMemoryNetwork)
+Ebesu et al. "Collaborative Memory Network for Recommendation Systems." SIGIR, 2018. [code](https://github.com/tebesu/CollaborativeMemoryNetwork)
+
+Fan et al. "Graph Neural Networks for Social Recommendation." WWW, 2019. [code](https://github.com/Wang-Shuo/GraphRec_PyTorch)
+
+Chong et al. "Efﬁcient Heterogeneous Collaborative Filtering without Negative Sampling for Recommendation." AAAI, 2020. [code](https://github.com/chenchongthu/EHCF)
+
 
 ## Requirements
 * numpy==1.14.2
