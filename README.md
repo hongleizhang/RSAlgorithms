@@ -244,6 +244,18 @@ if __name__ == '__main__':
 
 ```
 
+## Citing
+
+Please cite our paper if you use our codes. Thanks!
+
+    @inproceedings{pricai2018sotricf,
+    author="Zhang, Honglei and Liu, Gangdu and Wu, Jun",
+    title="Social Collaborative Filtering Ensemble",
+    booktitle="PRICAI 2018: Trends in Artificial Intelligence",
+    year="2018",
+    pages="1005--1017"
+    }
+
 ## RSPapers
 
 Recently, we have launched an open source project [**RSPapers**](https://github.com/hongleizhang/RSPapers), which includes some classical **Surveys**, **Classical Recommender System**, **Social Recommender System**, **Deep Learning based Recommender System**, **Cold Start Problem in Recommender System** and **POI Recommender System**. 
