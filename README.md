@@ -266,8 +266,6 @@ Specially summerize the Traditional and Social recommendations for you, and if y
 
 Greatly thank @**yunzhan2014** for making contributions to it.
 
-My ZhiHu: [Honglei Zhang](https://www.zhihu.com/people/hongleizhang)
-
 My Gmail: hongleizhang1993@gmail.com
 
 
