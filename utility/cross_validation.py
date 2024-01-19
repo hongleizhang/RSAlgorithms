@@ -61,14 +61,14 @@ def split_5_folds(configx):
             vals[k][from_ind:to_ind] = rating_vals[k_index_list]
             nonzeros[k] += sum(k_index_list)
 
-    if not os.path.exists('../data/cv'):
-        os.makedirs('../data/cv')
-        print('../data/cv folder has been established.')
+    if not os.path.exists(configx.rating_cv_path):
+        os.makedirs(configx.rating_cv_path)
+        print(f'{configx.rating_cv_path} folder has been established.')
 
     for k, (row, col, val, nonzero) in enumerate(zip(rows, cols, vals, nonzeros)):
         bucket_df = pd.DataFrame({'user': row[:nonzero], 'item': col[:nonzero], 'rating': val[:nonzero]},
                                  columns=['user', 'item', 'rating'])
-        bucket_df.to_csv("../data/cv/%s-%d.csv" % (configx.dataset_name, k), sep=configx.sep, header=False, index=False)
+        bucket_df.to_csv(f"{configx.rating_cv_path}%s-%d.csv" % (configx.dataset_name, k), sep=configx.sep, header=False, index=False)
         print("%s -fold%d data generated finished!" % (configx.dataset_name, k))
 
     print("All Data Generated Done!")
