@@ -11,7 +11,7 @@ class ConfigX(object):
         super(ConfigX, self).__init__()
 
         # Dataset Parameters
-        self.dataset_name = "ep"  # short name of datasets ["ft":"filmtrust","db":"douban","ca":"ciao"]
+        self.dataset_name = "ep"  # short name of datasets ["ft":"filmtrust","db":"douban","ca":"ciao", "ep":"Epinions", "dl": "Delicious"]
         self.k_fold_num = 5  # the num of cross validation
         self.rating_path = "../data/%s_ratings.txt" % self.dataset_name  # the raw ratings data file
         self.rating_cv_path = "../data/cv/"  # the cross validation file of ratings data
@@ -19,7 +19,7 @@ class ConfigX(object):
         self.sep = ' '  # the separator of rating and trust data in triple tuple
         self.random_state = 0  # the seed of random number
         self.size = 0.8  # the ratio of train set
-        self.min_val = 0.5  # the minimum rating value
+        self.min_val = 0.0  # the minimum rating value
         self.max_val = 5.0  # the maximum rating value
 
         # Model HyperParameter
