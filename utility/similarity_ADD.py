@@ -18,5 +18,3 @@ def jaccard(x1, x2):
         else:
             den += 2
     return num / den
-
-    

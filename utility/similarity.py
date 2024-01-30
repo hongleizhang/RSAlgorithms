@@ -83,6 +83,7 @@ def cosine_sp(x1, x2):
     except ZeroDivisionError:
         return 0
 
+
 def cosine_improved_sp(x1, x2):
     'x1,x2 are dicts,this version is for sparse representation'
     total = 0

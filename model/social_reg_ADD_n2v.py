@@ -9,8 +9,11 @@ from utility.matrix import SimMatrix
 from utility.similarity_ADD import jaccard
 from utility import util
 
+import networkx as nx
+from node2vec import Node2Vec
 
-class SocialRegADDJacc(MF):
+
+class SocialRegADDn2v(MF):
     """
     docstring for SocialReg
 
@@ -18,7 +21,7 @@ class SocialRegADDJacc(MF):
     """
 
     def __init__(self):
-        super(SocialRegADDJacc, self).__init__()
+        super(SocialRegADDn2v, self).__init__()
         # self.config.lambdaP = 0.001
         # self.config.lambdaQ = 0.001
         self.config.alpha = 0.1
@@ -26,28 +29,25 @@ class SocialRegADDJacc(MF):
         # self.init_model()
 
     def init_model(self, k):
-        super(SocialRegADDJacc, self).init_model(k)
-        from collections import defaultdict
-        self.user_sim = SimMatrix()
-        print('constructing user-user similarity matrix...')
+        # super(SocialRegADDn2v, self).init_model(k)
+        # from collections import defaultdict
+        # self.user_sim = SimMatrix()
+        # print('constructing user-user similarity matrix...')
 
-        # self.user_sim = util.load_data('../data/sim/ft_cf_soreg08_cv1.pkl')
-
-        for u in self.rg.user:
-            for f in self.tg.get_followees(u):
-                if self.user_sim.contains(u, f):
-                    continue
-                sim = self.get_sim(u, f)
-                self.user_sim.set(u, f, sim)
-
-        # util.save_data(self.user_sim,'../data/sim/ft_cf_soreg08.pkl')
+        # for u in self.rg.user:
+        #     for f in self.tg.get_followees(u):
+        #         if self.user_sim.contains(u, f):
+        #             continue
+        #         sim = self.get_sim(u, f)
+        #         self.user_sim.set(u, f, sim)
 
     def get_sim(self, u, k):
-        sim = (jaccard(self.rg.get_row(u), self.rg.get_row(k)) + 1.0) / 2.0  # fit the value into range [0.0,1.0]
+        # sim = (jaccard(self.rg.get_row(u), self.rg.get_row(k)) + 1.0) / 2.0  # fit the value into range [0.0,1.0]
+        sim = 0
         return sim
 
     def train_model(self, k):
-        super(SocialRegADDJacc, self).train_model(k)
+        super(SocialRegADDn2v, self).train_model(k)
         iteration = 0
         while iteration < self.config.maxIter:
             self.loss = 0
@@ -92,7 +92,7 @@ class SocialRegADDJacc(MF):
 
 
 if __name__ == '__main__':
-    # srg = SocialRegADDJacc()
+    # srg = SocialRegADDn2v()
     # srg.train_model(0)
     # coldrmse = srg.predict_model_cold_users()
     # print('cold start user rmse is :' + str(coldrmse))
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     rmses = []
     maes = []
-    tcsr = SocialRegADDJacc()
+    tcsr = SocialRegADDn2v()
     # print(bmf.rg.trainSet_u[1])
     for i in range(tcsr.config.k_fold_num):
         print('the %dth cross validation training' % i)
