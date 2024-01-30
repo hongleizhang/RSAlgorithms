@@ -12,7 +12,6 @@ from utility import util
 import networkx as nx
 from node2vec import Node2Vec
 
-
 class SocialRegADDn2v(MF):
     """
     docstring for SocialReg
@@ -29,10 +28,10 @@ class SocialRegADDn2v(MF):
         # self.init_model()
 
     def init_model(self, k):
-        # super(SocialRegADDn2v, self).init_model(k)
-        # from collections import defaultdict
-        # self.user_sim = SimMatrix()
-        # print('constructing user-user similarity matrix...')
+        super(SocialRegADDn2v, self).init_model(k)
+        from collections import defaultdict
+        self.user_sim = SimMatrix()
+        print('constructing user-user similarity matrix...')
 
         # for u in self.rg.user:
         #     for f in self.tg.get_followees(u):
@@ -41,10 +40,22 @@ class SocialRegADDn2v(MF):
         #         sim = self.get_sim(u, f)
         #         self.user_sim.set(u, f, sim)
 
-    def get_sim(self, u, k):
-        # sim = (jaccard(self.rg.get_row(u), self.rg.get_row(k)) + 1.0) / 2.0  # fit the value into range [0.0,1.0]
-        sim = 0
-        return sim
+        G = nx.Graph()
+        for u in self.rg.user:
+            for f in self.tg.get_followees(u):
+                G.add_edge(u, f)
+        
+        node2vec = Node2Vec(G, dimensions=10, walk_length=10, num_walks=80, workers=4)
+        model = node2vec.fit(window=10, min_count=1, batch_words=4)
+
+        embeddings = model.wv
+
+        for u in self.rg.user:
+            for f in self.tg.get_followees(u):
+                if self.user_sim.contains(u, f):
+                    continue
+                sim = embeddings.similarity(u, f)
+                self.user_sim.set(u, f, sim)
 
     def train_model(self, k):
         super(SocialRegADDn2v, self).train_model(k)
