@@ -12,6 +12,8 @@ from utility import util
 import networkx as nx
 from node2vec import Node2Vec
 
+import os
+
 class SocialRegADDn2v(MF):
     """
     docstring for SocialReg
@@ -45,7 +47,7 @@ class SocialRegADDn2v(MF):
             for f in self.tg.get_followees(u):
                 G.add_edge(u, f)
         
-        node2vec = Node2Vec(G, dimensions=10, walk_length=10, num_walks=80, workers=4)
+        node2vec = Node2Vec(G, dimensions=64, walk_length=10, num_walks=80, workers=os.cpu_count())
         model = node2vec.fit(window=10, min_count=1, batch_words=4)
 
         embeddings = model.wv
@@ -54,7 +56,7 @@ class SocialRegADDn2v(MF):
             for f in self.tg.get_followees(u):
                 if self.user_sim.contains(u, f):
                     continue
-                sim = embeddings.similarity(u, f)
+                sim = embeddings.similarity(str(u), str(f))
                 self.user_sim.set(u, f, sim)
 
     def train_model(self, k):
