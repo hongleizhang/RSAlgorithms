@@ -256,6 +256,15 @@ Please cite our paper if you use our codes. Thanks!
     pages="1005--1017"
     }
 
+    @inproceedings{chen2019integrating,
+      title={Integrating dual user network embedding with matrix factorization for social recommender systems},
+      author={Chen, Liying and Zhang, Honglei and Wu, Jun},
+      booktitle={2019 International Joint Conference on Neural Networks (IJCNN)},
+      pages={1--8},
+      year={2019},
+      organization={IEEE}
+    }
+
 ## RSPapers
 
 Recently, we have launched an open source project [**RSPapers**](https://github.com/hongleizhang/RSPapers), which includes some classical **Surveys**, **Classical Recommender System**, **Social Recommender System**, **Deep Learning based Recommender System**, **Cold Start Problem in Recommender System** and **POI Recommender System**. 
