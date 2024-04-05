@@ -249,20 +249,19 @@ if __name__ == '__main__':
 Please cite our paper if you use our codes. Thanks!
 
     @inproceedings{pricai2018sotricf,
-        author="Zhang, Honglei and Liu, Gangdu and Wu, Jun",
         title="Social Collaborative Filtering Ensemble",
-        booktitle="PRICAI 2018: Trends in Artificial Intelligence",
-        year="2018",
+        author="Zhang, Honglei and Liu, Gangdu and Wu, Jun",
+        booktitle="PRICAI",
         pages="1005--1017"
+        year="2018",
     }
 
     @inproceedings{ijcnn2019MFDGE,
         title={Integrating dual user network embedding with matrix factorization for social recommender systems},
         author={Chen, Liying and Zhang, Honglei and Wu, Jun},
-        booktitle={2019 International Joint Conference on Neural Networks (IJCNN)},
+        booktitle={IJCNN},
         pages={1--8},
         year={2019},
-        organization={IEEE}
     }
 
 ## RSPapers
